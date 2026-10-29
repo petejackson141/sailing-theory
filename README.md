@@ -1,6 +1,6 @@
 # Lights & Signals
 
-Flashcards and quiz for navigation lights, day shapes, sound signals and code flags, in English and Hebrew.
+Learn pages, flashcards and quiz for navigation lights, day shapes, sound signals and code flags. English only for now (the Hebrew text is kept in the code, just hidden).
 A teaching aid for the seamanship class, matched to the skipper syllabus lists.
 
 Live app: https://petejackson141.github.io/sailing-theory/

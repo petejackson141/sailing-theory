@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lights &amp; Signals</title>
-<meta name="description" content="Flashcards and quiz for navigation lights, day shapes, sound signals and code flags. English and Hebrew.">
+<meta name="description" content="Learn pages, flashcards and quiz for navigation lights, day shapes, sound signals and code flags.">
 <meta name="theme-color" content="#10212f">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
@@ -67,11 +67,11 @@ h1{font-family:var(--display);font-weight:700;font-size:1.6rem;line-height:1.1;m
 .got{background:var(--good);color:var(--bg)}
 .pattern{display:flex;flex-wrap:wrap;align-items:center;gap:8px;direction:ltr}
 .blip{display:inline-block;background:var(--ink);border-radius:999px;height:12px}
-.blip.s{width:12px}.blip.f{width:14px;height:14px;background:#f3c64a;box-shadow:0 0 8px #f3c64a}.blip.l{width:46px}
+.blip.s{width:12px}.blip.c{width:130px}.blip.f{width:14px;height:14px;background:#f3c64a;box-shadow:0 0 8px #f3c64a}.blip.l{width:46px}
 .tag{font:500 .75rem var(--mono);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink)}
 .play{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:2px solid #f3c64a;background:rgba(243,198,74,.12);color:#f3c64a;font:600 .85rem var(--display);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
 .play svg{width:26px;height:26px}
-.mode{display:grid;grid-template-columns:1fr 1fr;background:var(--chip);border-radius:12px;padding:4px;gap:4px}
+.mode{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--chip);border-radius:12px;padding:4px;gap:4px}
 .mode button{border:0;border-radius:9px;background:transparent;color:var(--muted);font:600 .95rem var(--display);padding:9px;cursor:pointer}
 .mode button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .qlabel{display:block;font:500 .8rem var(--body);color:var(--muted);margin-bottom:2px}
@@ -86,6 +86,16 @@ h1{font-family:var(--display);font-weight:700;font-size:1.6rem;line-height:1.1;m
 .opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--bg));opacity:1}
 .opt.wrong{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--bg));opacity:1}
 .opt:focus-visible,.mode button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap.wide{max-width:1040px}
+.learn{display:flex;flex-direction:column;gap:14px}
+.learn h2{font:700 1.15rem var(--display);margin:10px 0 0}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.li{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px}
+.li .viz{border-radius:8px}
+.ltx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ltx b{font:600 .95rem var(--display);line-height:1.3}
+.lnum{font:500 .7rem var(--mono);color:var(--muted);letter-spacing:.03em}
+.ld{font-size:.85rem;color:var(--muted);line-height:1.4}
 .done{padding:28px 18px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
 .keys{font-size:.8rem;color:var(--muted);text-align:center}
 .keys kbd{font:500 .75rem var(--mono);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
@@ -101,15 +111,16 @@ h1{font-family:var(--display);font-weight:700;font-size:1.6rem;line-height:1.1;m
       <h1 id="t-title"></h1>
       <p class="sub" id="t-sub"></p>
     </div>
-    <div class="lang" role="group" aria-label="Language">
+    <div class="lang" role="group" aria-label="Language" hidden>
       <button id="lang-en" type="button">EN</button>
       <button id="lang-he" type="button">עב</button>
     </div>
   </header>
-  <div class="mode" role="group" aria-label="Mode"><button id="mode-cards" type="button"></button><button id="mode-quiz" type="button"></button></div>
+  <div class="mode" role="group" aria-label="Mode"><button id="mode-learn" type="button"></button><button id="mode-cards" type="button"></button><button id="mode-quiz" type="button"></button></div>
   <nav class="chips" id="chips" aria-label="Card set"></nav>
   <div class="stats"><span id="count"></span><span class="tools"><button class="link" id="shuffle" type="button"></button><button class="link" id="reset" type="button"></button></span></div>
   <section class="card" id="card" aria-live="polite"></section>
+  <section class="learn" id="learn" hidden></section>
   <p class="keys" id="keys"></p>
 </div>
 
@@ -120,11 +131,11 @@ const T={
   all:'All',lights:'Lights',shapes:'Day shapes',sounds:'Sounds',flags:'Flags',
   show:'Show answer',again:'Again',got:'Got it',left:'left',known:'known',shuffle:'Shuffle',reset:'Start over',
   play:'Play',stop:'Stop',done:'Every card in this set is marked as known.',studyAgain:'Study this set again',
-  keys:'<kbd>Space</kbd> show answer · <kbd>1</kbd> again · <kbd>2</kbd> got it · <kbd>P</kbd> play sound',
+  keys:'<kbd>Space</kbd> show answer · <kbd>1</kbd> again · <kbd>2</kbd> got it',
   v:{ahead:'At night, seen from ahead. What is it?',left:'At night, heading to your left. What is it?',right:'At night, heading to your right. What is it?',astern:'At night, seen from astern. What is it?',any:'At night. What is it?'},
   shapeQ:'By day. What does this signal?',
-  sq:{sight:'Vessels in sight of each other. What does it mean?',fog:'Restricted visibility. What is it?',any:'Any visibility. What does it mean?'},
-  flagQ:'Code flag. What does it mean?',lightQ:'Light signal between vessels in sight. What does it mean?',rev:'reverse',revQ:{D:'Which day shape shows:',F:'Which flag signal means:',S:'Which signal is given:'},modeCards:'Flashcards',modeQuiz:'Quiz',correct:'correct',score:'Score:',newQuiz:'New quiz',next:'Next',qkeys:'<kbd>1</kbd>–<kbd>4</kbd> answer · <kbd>Enter</kbd> next · <kbd>P</kbd> play sound',catNames:{L:'Lights',D:'Day shape',S:'Signal',F:'Flag'}},
+  sq:{sight:'Sound signal, vessels in sight of each other. What does it mean?',fog:'Sound signal in restricted visibility. What does it mean?',any:'Sound signal. What does it mean?'},
+  flagQ:'Code flag. What does it mean?',modeLearn:'Learn',learnHead:{L:'Lights at night',D:'Day shapes',S:'Sound signals',F:'Flags'},lightQ:'Light signal between vessels in sight. What does it mean?',rev:'reverse',revQ:{D:'Which day shape shows:',F:'Which flag signal means:',S:'Which signal is given:'},modeCards:'Flashcards',modeQuiz:'Quiz',correct:'correct',score:'Score:',newQuiz:'New quiz',next:'Next',qkeys:'<kbd>1</kbd>–<kbd>4</kbd> answer · <kbd>Enter</kbd> next',catNames:{L:'Lights',D:'Day shape',S:'Signal',F:'Flag'}},
  he:{title:'אורות ואותות',sub:'כרטיסיות לאורות ניווט, צורות יום, אותות קול ודגלי קוד (COLREGs, IALA A).',
   all:'הכל',lights:'אורות',shapes:'צורות יום',sounds:'אותות קול',flags:'דגלים',
   show:'הצג תשובה',again:'שוב',got:'ידעתי',left:'נותרו',known:'ידועים',shuffle:'ערבב',reset:'התחל מחדש',
@@ -133,7 +144,7 @@ const T={
   v:{ahead:'בלילה, מבט מלפנים. מה זה?',left:'בלילה, מפליג שמאלה. מה זה?',right:'בלילה, מפליג ימינה. מה זה?',astern:'בלילה, מבט מאחור. מה זה?',any:'בלילה. מה זה?'},
   shapeQ:'ביום. מה מסמנת הצורה?',
   sq:{sight:'כלי שיט בראייה הדדית. מה המשמעות?',fog:'ראות מוגבלת. מה זה?',any:'בכל ראות. מה המשמעות?'},
-  flagQ:'דגל קוד. מה משמעותו?',lightQ:'אות אור בין כלי שיט בראייה. מה המשמעות?',rev:'הפוך',revQ:{D:'איזו צורת יום מסמנת:',F:'איזה אות דגלים משמעותו:',S:'איזה אות ניתן:'},modeCards:'כרטיסיות',modeQuiz:'מבחן',correct:'נכונות',score:'ציון:',newQuiz:'מבחן חדש',next:'הבא',qkeys:'<kbd>1</kbd>–<kbd>4</kbd> תשובה · <kbd>Enter</kbd> הבא · <kbd>P</kbd> השמע',catNames:{L:'אורות',D:'צורת יום',S:'אות',F:'דגל'}}
+  flagQ:'דגל קוד. מה משמעותו?',modeLearn:'לימוד',learnHead:{L:'אורות לילה',D:'סימני יום',S:'אותות קוליים',F:'דגלים'},lightQ:'אות אור בין כלי שיט בראייה. מה המשמעות?',rev:'הפוך',revQ:{D:'איזו צורת יום מסמנת:',F:'איזה אות דגלים משמעותו:',S:'איזה אות ניתן:'},modeCards:'כרטיסיות',modeQuiz:'מבחן',correct:'נכונות',score:'ציון:',newQuiz:'מבחן חדש',next:'הבא',qkeys:'<kbd>1</kbd>–<kbd>4</kbd> תשובה · <kbd>Enter</kbd> הבא · <kbd>P</kbd> השמע',catNames:{L:'אורות',D:'צורת יום',S:'אות',F:'דגל'}}
 };
 
 // ---------- data ----------
@@ -415,52 +426,32 @@ function flagsSVG(c){
   c.flags.forEach((k,i)=>{const y=n===1?25:12+i*96; s+=`<line x1="34" y1="${y}" x2="44" y2="${y}" stroke="#7a8791" stroke-width="1.5"/><g transform="translate(44 ${y})">${flag(k)}</g>`;});
   return s+'</svg>';
 }
-function soundPanel(c){
-  return `<svg class="viz" viewBox="0 0 200 110" aria-hidden="true"><defs><linearGradient id="fog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3a46"/><stop offset="1" stop-color="#121c24"/></linearGradient></defs><rect width="200" height="110" fill="url(#fog)"/>
-  ${c&&c.ctx==='light'?'<circle cx="100" cy="55" r="16" fill="#fff3d6" opacity=".25" filter="url(#lg)"/><circle id="lamp" cx="100" cy="55" r="6" fill="#fff3d6" opacity=".12"/><defs><filter id="lg" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="5"/></filter></defs>':'<g fill="none" stroke="#f3c64a" stroke-opacity=".18"><circle cx="100" cy="55" r="44"/><circle cx="100" cy="55" r="62"/><circle cx="100" cy="55" r="80"/></g>'}</svg>`;
+function soundSVG(seq){
+  // draws the signal the way the syllabus shows it: dots for short blasts, dashes for long ones
+  const toks=[...(seq||'')],W={s:10,l:30,C:140},GAP=12;
+  const total=toks.reduce((n,t)=>n+(W[t]||0),0)+GAP*Math.max(0,toks.length-1);
+  let x=100-total/2,g='';
+  for(const t of toks){
+    if(t==='s')g+=`<circle cx="${x+5}" cy="55" r="5" fill="#15191d"/>`;
+    else if(t==='l'||t==='C')g+=`<rect x="${x}" y="51" width="${W[t]}" height="8" rx="4" fill="#15191d"/>`;
+    x+=(W[t]||0)+GAP;
+  }
+  return `<svg class="viz" viewBox="0 0 200 110" role="img" aria-label="Sound signal"><rect width="200" height="110" fill="#c9ced3"/>${g}</svg>`;
 }
 function patternHTML(seq,lang){
   const lab={en:{B:'Bell 5 s',G:'Gong 5 s',k:'Bell stroke',C:'Continuous'},he:{B:'פעמון 5 ש\'',G:'גונג 5 ש\'',k:'מכת פעמון',C:'רציף'}}[lang];
   if(seq==='SOS')return '<span class="pattern"><span class="tag">··· — — — ···</span></span>';
-  return '<span class="pattern">'+[...seq].map(t=>t==='f'?'<span class="blip f" title="flash"></span>':t==='s'?'<span class="blip s" title="short"></span>':t==='l'?'<span class="blip l" title="long"></span>':`<span class="tag">${lab[t]}</span>`).join('')+'</span>';
+  return '<span class="pattern">'+[...seq].map(t=>t==='f'?'<span class="blip f" title="flash"></span>':t==='s'?'<span class="blip s" title="short"></span>':t==='l'?'<span class="blip l" title="long"></span>':t==='C'?'<span class="blip c" title="continuous"></span>':`<span class="tag">${lab[t]}</span>`).join('')+'</span>';
 }
 
-// ---------- audio ----------
-let AC=null,nodes=[],endTimer=null,timers=[];
-function ac(){if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
-function track(n){nodes.push(n);return n}
-function horn(t,d){const a=ac(),g=a.createGain(),f=a.createBiquadFilter();f.type='lowpass';f.frequency.value=1100;
- g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.16,t+.06);g.gain.setValueAtTime(.16,t+d-.08);g.gain.linearRampToValueAtTime(0,t+d);
- g.connect(f);f.connect(a.destination);for(const hz of [196,247]){const o=track(a.createOscillator());o.type='sawtooth';o.frequency.value=hz;o.connect(g);o.start(t);o.stop(t+d+.02)}}
-function ping(t,hz,dec,vol){const a=ac(),g=a.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0008,t+dec);g.connect(a.destination);
- for(const m of [1,2.76]){const o=track(a.createOscillator());o.type='sine';o.frequency.value=hz*m;o.connect(g);o.start(t);o.stop(t+dec)}}
-function beep(t,d){const a=ac(),g=a.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.14,t+.01);g.gain.setValueAtTime(.14,t+d-.01);g.gain.linearRampToValueAtTime(0,t+d);g.connect(a.destination);const o=track(a.createOscillator());o.frequency.value=760;o.connect(g);o.start(t);o.stop(t+d+.02)}
-function stopSound(){nodes.forEach(n=>{try{n.stop()}catch(e){}});nodes=[];timers.forEach(clearTimeout);timers=[];const lp=document.getElementById('lamp');if(lp)lp.setAttribute('opacity','.12');clearTimeout(endTimer);setPlaying(false)}
-function playSeq(seq){
-  stopSound();
-  if(seq[0]==='f'){const fast=seq.length>=5,on=fast?350:1000,off=fast?300:1000;let ms=150;
-    for(const _ of seq){timers.push(setTimeout(()=>{const lp=document.getElementById('lamp');lp&&lp.setAttribute('opacity','1')},ms));ms+=on;
-      timers.push(setTimeout(()=>{const lp=document.getElementById('lamp');lp&&lp.setAttribute('opacity','.12')},ms));ms+=off}
-    setPlaying(true);endTimer=setTimeout(()=>setPlaying(false),ms);return}
-  const a=ac();let t=a.currentTime+.1;
-  if(seq==='SOS'){const u=.13;const L=(n,len)=>{for(let i=0;i<n;i++){beep(t,len);t+=len+u}t+=u*2};L(3,u);L(3,u*3);L(3,u);}
-  else for(const k of seq){
-    if(k==='s'){horn(t,1);t+=2}
-    else if(k==='l'){horn(t,4);t+=5}
-    else if(k==='C'){horn(t,8);t+=8.5}
-    else if(k==='B'){for(let i=0;i<40;i++)ping(t+i*.125,1900,.3,.07);t+=5.5}
-    else if(k==='G'){for(let i=0;i<8;i++)ping(t+i*.65,110,1.4,.35);t+=5.8}
-    else if(k==='k'){ping(t,1900,1.2,.12);t+=1}
-  }
-  setPlaying(true);endTimer=setTimeout(()=>setPlaying(false),(t-a.currentTime)*1000);
-}
-let playing=false;
-function setPlaying(v){playing=v;const b=document.getElementById('playbtn');if(b){b.querySelector('span').textContent=v?T[st.lang].stop:T[st.lang].play;b.querySelector('svg').innerHTML=v?'<rect x="6" y="6" width="12" height="12" fill="currentColor"/>':'<path d="M7 4l13 8-13 8z" fill="currentColor"/>'}}
+// sounds are shown, not played
+let playing=false;function stopSound(){}
 
 // ---------- state ----------
 const KEY='lights-signals-cards-v1';
 let st={lang:'en',set:'all',known:[],mode:'cards'};
 try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+st.lang='en'; // Hebrew hidden for now
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({lang:st.lang,set:st.set,known:st.known,mode:st.mode}))}catch(e){}};
 let pile=[],revealed=false,quiz={opts:[],picked:null,right:0,done:0};
 const SETS=[['all',null],['lights','L'],['shapes','D'],['sounds','S'],['flags','F']];
@@ -469,6 +460,7 @@ const quizable=c=>!(c.cat==='S'&&!c.seq);
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function build(){
   stopSound();revealed=false;
+  if(st.mode==='learn'){render();return}
   if(st.mode==='quiz'){pile=shuffle(ALL.filter(c=>inSet(c)&&quizable(c)));quiz={opts:[],picked:null,right:0,done:0};makeOpts()}
   else pile=shuffle(ALL.filter(c=>inSet(c)&&!st.known.includes(c.id)));
   render();
@@ -489,7 +481,7 @@ function renderChrome(){
   document.documentElement.lang=st.lang;document.documentElement.dir=st.lang==='he'?'rtl':'ltr';
   document.getElementById('t-title').textContent=t.title;document.getElementById('t-sub').textContent=t.sub;
   document.getElementById('lang-en').setAttribute('aria-pressed',st.lang==='en');document.getElementById('lang-he').setAttribute('aria-pressed',st.lang==='he');
-  document.getElementById('mode-cards').textContent=t.modeCards;document.getElementById('mode-quiz').textContent=t.modeQuiz;
+  document.getElementById('mode-learn').textContent=t.modeLearn;document.getElementById('mode-learn').setAttribute('aria-pressed',st.mode==='learn');document.getElementById('mode-cards').textContent=t.modeCards;document.getElementById('mode-quiz').textContent=t.modeQuiz;
   document.getElementById('mode-cards').setAttribute('aria-pressed',st.mode==='cards');document.getElementById('mode-quiz').setAttribute('aria-pressed',st.mode==='quiz');
   document.getElementById('chips').innerHTML=SETS.map(([k,m])=>`<button class="chip" type="button" data-set="${k}" aria-pressed="${st.set===k}">${t[k]}<span class="n">${ALL.filter(c=>!m||c.cat===m).length}</span></button>`).join('');
   document.getElementById('shuffle').textContent=t.shuffle;document.getElementById('reset').textContent=t.reset;
@@ -500,7 +492,7 @@ function question(c,t){
   if(c.rev)return `<span class="qlabel">${t.revQ[c.cat]}</span>${st.lang==='he'?c.he:c.en}`;
   if(c.cat==='L')return t.v[c.view];if(c.cat==='D')return t.shapeQ;if(c.cat==='S')return c.ctx==='light'?t.lightQ:t.sq[c.ctx];return t.flagQ;
 }
-function vizOf(c){return c.cat==='L'?lightsSVG(c):c.cat==='D'?shapesSVG(c):c.cat==='F'?flagsSVG(c):soundPanel(c)}
+function vizOf(c){return c.cat==='L'?lightsSVG(c):c.cat==='D'?shapesSVG(c):c.cat==='F'?flagsSVG(c):soundSVG(c.seq)}
 function hidden(){return `<svg class="viz" viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#1a2a37"/><text x="100" y="60" text-anchor="middle" font-family="Rubik,sans-serif" font-size="44" font-weight="700" fill="#f3c64a" opacity=".85">?</text></svg>`}
 function optVisual(x,lang){
   if(!x.rev)return `<span>${lang==='he'?x.he:x.en}</span>`;
@@ -509,6 +501,12 @@ function optVisual(x,lang){
 }
 function render(){
   renderChrome();
+  const learning=st.mode==='learn';
+  document.querySelector('.wrap').classList.toggle('wide',learning);
+  ['card','keys'].forEach(id=>document.getElementById(id).hidden=learning);
+  document.querySelector('.stats').hidden=learning;
+  document.getElementById('learn').hidden=!learning;
+  if(learning){renderLearn();return}
   const t=T[st.lang],lang=st.lang,el=document.getElementById('card'),quizMode=st.mode==='quiz';
   const total=ALL.filter(c=>inSet(c)).length,known=ALL.filter(c=>inSet(c)&&st.known.includes(c.id)).length;
   document.getElementById('count').textContent=quizMode?`${pile.length} ${t.left} · ${quiz.right}/${quiz.done} ${t.correct}`:`${pile.length} ${t.left} · ${known}/${total} ${t.known}`;
@@ -518,12 +516,10 @@ function render(){
     document.getElementById('again-set').onclick=quizMode?build:resetSet;return}
   const c=pile[0];
   const showViz=!c.rev||revealed||(quizMode&&quiz.picked!==null);
-  const hasAudio=c.cat==='S'&&c.seq&&(!c.rev||showViz);
-  const viz=c.rev&&!showViz?hidden():c.rev&&c.cat==='S'?soundPanel(c):vizOf(c);
-  const play=hasAudio?`<button class="play" id="playbtn" type="button"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg><span>${t.play}</span></button>`:'';
+  const viz=c.rev&&!showViz?hidden():vizOf(c);
   const ansBlock=()=>c.rev
-    ?`<div class="answer">${c.cat==='S'?patternHTML(c.seq,lang):''}<div class="a">${lang==='he'?c.dhe:c.den}</div><div class="rule">${c.rule}</div></div>`
-    :`<div class="answer">${c.cat==='S'?patternHTML(c.seq,lang):''}<div class="a">${lang==='he'?c.he:c.en}</div><div class="d">${lang==='he'?c.dhe:c.den}</div><div class="rule">${c.rule}</div></div>`;
+    ?`<div class="answer"><div class="a">${lang==='he'?c.dhe:c.den}</div><div class="rule">${c.rule}</div></div>`
+    :`<div class="answer"><div class="a">${lang==='he'?c.he:c.en}</div><div class="d">${lang==='he'?c.dhe:c.den}</div><div class="rule">${c.rule}</div></div>`;
   let body;
   if(quizMode){
     const picked=quiz.picked!==null;
@@ -533,11 +529,21 @@ function render(){
     body=`<div class="opts${c.rev&&c.cat!=='S'?' grid':''}">${opts}</div>${picked?ansBlock()+`<button class="btn reveal" id="b-next" type="button">${t.next}</button>`:''}`;
   } else body=revealed?ansBlock()+`<div class="grade"><button class="btn again" id="b-again" type="button">${t.again}</button><button class="btn got" id="b-got" type="button">${t.got}</button></div>`
     :`<button class="btn reveal" id="b-show" type="button">${t.show}</button>`;
-  el.innerHTML=`<div class="viz-wrap">${viz}<span class="cat">${t.catNames[c.cat]}${c.num?' · '+c.num:''}${c.rev?' · '+t.rev:''}</span>${play}</div><div class="q">${question(c,t)}</div><div class="body">${body}</div>`;
-  if(hasAudio){document.getElementById('playbtn').onclick=()=>playing?stopSound():playSeq(c.seq);setPlaying(playing)}
+  el.innerHTML=`<div class="viz-wrap">${viz}<span class="cat">${t.catNames[c.cat]}${c.num?' · '+c.num:''}${c.rev?' · '+t.rev:''}</span></div><div class="q">${question(c,t)}</div><div class="body">${body}</div>`;
   if(quizMode){el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.i));const n=document.getElementById('b-next');if(n){n.onclick=nextQ;n.focus()}}
   else if(revealed){document.getElementById('b-again').onclick=again;document.getElementById('b-got').onclick=got}
   else document.getElementById('b-show').onclick=show;
+}
+// Learn: every item in the chosen set, picture next to its meaning, in syllabus order
+function renderLearn(){
+  const t=T[st.lang],lang=st.lang;
+  const html=['L','D','S','F'].map(cat=>{
+    const items=ALL.filter(c=>c.cat===cat&&!c.rev&&inSet(c)).sort((a,b)=>(a.num||0)-(b.num||0));
+    if(!items.length)return '';
+    const rows=items.map(c=>`<article class="li">${vizOf(c)}<div class="ltx"><span class="lnum">${c.num?'#'+c.num+' · ':''}${c.rule}</span><b>${lang==='he'?c.he:c.en}</b><span class="ld">${lang==='he'?c.dhe:c.den}</span></div></article>`).join('');
+    return `<h2>${t.learnHead[cat]} <span class="n" style="font:500 .8rem var(--mono);color:var(--muted)">${items.length}</span></h2><div class="lgrid">${rows}</div>`;
+  }).join('');
+  document.getElementById('learn').innerHTML=html;
 }
 function pick(i){if(quiz.picked!==null)return;quiz.picked=i;quiz.done++;if(quiz.opts[i]===pile[0])quiz.right++;stopSound();render()}
 function nextQ(){pile.shift();stopSound();makeOpts();render()}
@@ -550,14 +556,14 @@ function resetSet(){st.known=st.known.filter(id=>{const c=ALL.find(x=>x.id===id)
 document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;st.set=b.dataset.set;save();build()});
 document.getElementById('lang-en').onclick=()=>{st.lang='en';save();render()};
 document.getElementById('lang-he').onclick=()=>{st.lang='he';save();render()};
+document.getElementById('mode-learn').onclick=()=>{st.mode='learn';save();render()};
 document.getElementById('mode-cards').onclick=()=>{st.mode='cards';save();build()};
 document.getElementById('mode-quiz').onclick=()=>{st.mode='quiz';save();build()};
 document.getElementById('shuffle').onclick=()=>{shuffle(pile);revealed=false;stopSound();render()};
 document.getElementById('reset').onclick=()=>st.mode==='quiz'?build():resetSet();
 document.addEventListener('keydown',e=>{
-  if(e.target.closest('input,textarea'))return;
+  if(e.target.closest('input,textarea')||st.mode==='learn')return;
   const c=pile[0];if(!c)return;
-  if((e.key==='p'||e.key==='P')&&c.cat==='S'&&c.seq&&(!c.rev||revealed||quiz.picked!==null)){playing?stopSound():playSeq(c.seq);return}
   if(st.mode==='quiz'){
     if(quiz.picked===null&&/^[1-4]$/.test(e.key)&&+e.key<=quiz.opts.length)pick(+e.key-1);
     else if(quiz.picked!==null&&(e.key==='Enter'||e.key===' ')){e.preventDefault();nextQ()}
