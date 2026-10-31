@@ -1,6 +1,6 @@
 /* Sailing Theory — shared app code used by every page (same idea as Master GMDSS):
    registers the service worker (offline + install), handles the "Install app" button and shows the version. */
-const ST_VERSION = '2.0.0';
+const ST_VERSION = '2.0.1';
 
 (function () {
   // Work out where the app's root folder is, so this works from any page and at any web address
