@@ -126,16 +126,20 @@ function makeSituation(mode){
     else{k1=pick(ALLK);k2=pick(ALLK);if(mode==='mixed'&&RANK[TYPES[k1].cat]===RANK[TYPES[k2].cat])continue}
     const t=[TYPES[k1],TYPES[k2]];
     const idx=[rnd(16),rnd(16)];if(idx[0]===idx[1])continue;
+    // about a third of the time (not sail vs sail) set up an overtaking: courses close together, one vessel well astern
+    const forceOver=mode!=='sail'&&Math.random()<.3;
+    if(forceOver)idx[1]=(idx[0]+pick([1,2,-1,-2])+16)%16;
     // letter = where she comes from, so she heads the opposite way, towards the centre
     const h=idx.map(i=>(i*22.5+180)%360),wi=rnd(16),w=wi*22.5;        // w = direction the wind blows FROM
     const rwa=h.map(x=>norm(w-x));                          // wind angle on each bow: + starboard, - port
     // sailing vessels can't point closer than 45° to the wind, and a dead run makes the tack unclear
     if(t.some((x,i)=>x.cat==='sail'&&(Math.abs(rwa[i])<45||Math.abs(rwa[i])>157.5)))continue;
-    const s=t.map(x=>x.spd*(.85+Math.random()*.3));
+    const s=t.map(x=>x.spd*(.55+Math.random()*.65));        // speeds vary, so one may be much faster (overtaking)
     let p=h.map((x,i)=>{const v=vel(x);return [-v[0]*s[i],-v[1]*s[i]]});
     const d=p.map(q=>Math.hypot(q[0],q[1])),m=Math.max(...d);
-    if(Math.min(...d)/m<.45)continue;                       // keep both vessels well away from the centre
+    const ratio=Math.min(...d)/m;if(ratio<.08)continue;    // the nearer vessel must not start on top of the centre
     const k=88/m;p=p.map(q=>[q[0]*k,q[1]*k]);
+    if(forceOver){const dd=[80+rnd(9),8+rnd(18)];if(Math.random()<.5)dd.reverse();p=h.map((x,i)=>{const v=vel(x);return [-v[0]*dd[i],-v[1]*dd[i]]})}
     if(Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])<42)continue; // start far enough apart to read the picture
     const rb12=norm(brg(p[1][0]-p[0][0],p[1][1]-p[0][1])-h[0]); // where 2 is, seen from 1 (+ = starboard)
     const rb21=norm(brg(p[0][0]-p[1][0],p[0][1]-p[1][1])-h[1]);
@@ -145,6 +149,9 @@ function makeSituation(mode){
     const headOn=bothPow&&Math.abs(rb12)<6&&Math.abs(rb21)<6;
     if(bothPow&&!headOn&&Math.abs(rb12)<20&&Math.abs(rb21)<20)continue; // "nearly head-on": leave out, it's a judgement call
     let over=0;if(Math.abs(rb12)>112.5)over=2;else if(Math.abs(rb21)>112.5)over=1; // vessel number that is overtaking
+    if(!over&&ratio<.45)continue;
+    if(forceOver&&!over)continue;
+    if(over&&t[over-1].spd<t[2-over].spd)continue;          // the overtaking vessel must be the faster type                           // only an overtaken vessel may start close to the centre (gives the overtaker sea room)
     let give,kind,rule,why=[],tack=null;
     const n1=0,n2=1,R=[RANK[t[0].cat],RANK[t[1].cat]];
     if(over){
@@ -234,6 +241,7 @@ function windArrow(w,size){
   return `<g transform="rotate(${w+180})"><line x1="0" y1="${size*.75}" x2="0" y2="${-size*.45}" stroke="#16324F" stroke-width="${size*.16}" stroke-linecap="round"/><polygon points="0,${-size*.85} ${size*.38},${-size*.3} ${-size*.38},${-size*.3}" fill="#16324F"/></g>`;
 }
 function drawChart(){
+  drawnHd[0]=drawnHd[1]=null;
   const el=document.getElementById('chart');
   let streaks='';for(let x=-150;x<=150;x+=30){const off=rnd(60);streaks+=`<line class="streak" x1="${x}" y1="-170" x2="${x}" y2="170" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 44" style="stroke-dashoffset:${off}px;animation-delay:-${(off/25).toFixed(2)}s"/>`}
   let ring='';for(let i=0;i<16;i++)ring+=ringLetter(i,S.idx.indexOf(i));
@@ -253,38 +261,71 @@ function drawChart(){
    ${boats}`;
   placeBoats(S.p.map(q=>[CX+q[0],CY+q[1]]),S.h);
 }
+const drawnHd=[null,null];
 function placeBoats(pos,hd){
   pos.forEach((q,i)=>{const g=document.getElementById('v'+i);if(!g)return;
     g.setAttribute('transform',`translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})`);
-    g.querySelector('.rot').setAttribute("transform",`rotate(${hd[i].toFixed(1)}) scale(1.3)`)});
+    const r=g.querySelector('.rot');
+    // a boat with a sail re-trims it as she turns, so the boom stays on the side away from the wind
+    if(S.t[i].draw==='yacht'||S.t[i].draw==='dinghy'){if(drawnHd[i]===null||Math.abs(norm(hd[i]-drawnHd[i]))>3){r.innerHTML=vessel(S.t[i],C[i],norm(S.w-hd[i]));drawnHd[i]=hd[i]}}
+    r.setAttribute("transform",`rotate(${hd[i].toFixed(1)}) scale(1.3)`)});
 }
 
 // ---------- after answering: show the manoeuvre ----------
-// Both keep going towards the centre; the give-way vessel (or both, head-on) turns to starboard and may slow.
-// We try a few turns and pick the first that keeps a safe gap, so the picture never shows a collision.
+// The stand-on vessel keeps her course and speed (Rule 17). The give-way vessel (or both, head-on) takes
+// early, substantial action (Rule 16): a clear turn to starboard, and she slows if needed. A manoeuvre is only
+// shown if it obeys the rules:
+//  - she passes at a safe distance, measured hull to hull including any tow or net (Rule 8)
+//  - the give-way vessel never crosses ahead of the stand-on vessel (Rule 15)
+//  - head-on, both pass port to port (Rule 14)
 const DUR=4.2,MEET=3;                                       // seconds of animation; without action they meet at 3 s
+const LEN={motor:[13,13],ship:[22,16],tug:[11,38],yacht:[14,14],dinghy:[9,9],fishing:[12,30],dredger:[16,16]}; // [bow, stern incl. tow/net] in drawing units
+const CLEAR=18;                                             // minimum clear water between the two outlines
+function outline(i,pos,hd){                                 // points along the vessel's centreline, bow to end of tow/net
+  const [f,b]=LEN[S.t[i].draw].map(x=>x*1.3),v=vel(hd),pts=[];
+  for(let k=0;k<=6;k++){const d=f-(f+b)*k/6;pts.push([pos[0]+v[0]*d,pos[1]+v[1]*d])}
+  return pts;
+}
+function gap(pos,hd){                                       // distance between the two outlines, less half their beam
+  const A=outline(0,pos[0],hd[0]),B=outline(1,pos[1],hd[1]);let m=1e9;
+  for(const a of A)for(const b of B)m=Math.min(m,Math.hypot(a[0]-b[0],a[1]-b[1]));
+  return m-12;
+}
 function simulate(plan,tEnd,collect){
   const pos=S.p.map(q=>[CX+q[0],CY+q[1]]),hd=[...S.h],sp=S.p.map(q=>Math.hypot(q[0],q[1])/MEET);
-  let minD=1e9,frames=[];const dt=1/30;
+  const g=S.give==='both'?null:S.give-1,so=g===null?null:1-g;
+  let minGap=1e9,frames=[],crossedAhead=false,prevAcross=null,cpa=null;const dt=1/30;
   for(let tt=0;tt<=tEnd+1e-9;tt+=dt){
     for(let i=0;i<2;i++){
       const pl=plan[i];let f=1;
       if(pl&&tt>.25){const k=Math.min(1,(tt-.25)/.7);hd[i]=S.h[i]+pl.turn*k;f=1-(1-pl.slow)*k}
       const v=vel(hd[i]);pos[i][0]+=v[0]*sp[i]*f*dt;pos[i][1]+=v[1]*sp[i]*f*dt;
     }
-    minD=Math.min(minD,Math.hypot(pos[0][0]-pos[1][0],pos[0][1]-pos[1][1]));
+    const gp=gap(pos,hd);
+    if(gp<minGap){minGap=gp;cpa=[norm(brg(pos[1][0]-pos[0][0],pos[1][1]-pos[0][1])-hd[0]),norm(brg(pos[0][0]-pos[1][0],pos[0][1]-pos[1][1])-hd[1])]}
+    if(g!==null){                                           // did the give-way vessel cut across the stand-on vessel's bow?
+      const v=vel(hd[so]),rx=pos[g][0]-pos[so][0],ry=pos[g][1]-pos[so][1];
+      const along=rx*v[0]+ry*v[1],across=Math.sign(rx*v[1]-ry*v[0]);
+      if(prevAcross!==null&&across!==0&&across!==prevAcross&&along>0&&along<220)crossedAhead=true;
+      if(across!==0)prevAcross=across;
+    }
     if(collect)frames.push([pos.map(q=>[...q]),[...hd]]);
   }
-  return {minD,frames};
+  const portToPort=cpa&&cpa[0]<0&&cpa[1]<0;
+  const ok=minGap>CLEAR&&!crossedAhead&&(S.give!=='both'||portToPort);
+  return {minGap,crossedAhead,portToPort,ok,frames};
 }
 function bestPlan(){
+  // first choice: a turn to starboard (slowing down if needed); only if no starboard turn obeys the rules,
+  // a turn to port that keeps away from the other vessel (never head-on: Rule 14 says starboard)
   const who=S.give==='both'?[0,1]:[S.give-1];
-  const turns=S.give==='both'?[30,45,60,75]:[40,60,80,100,120,140],slows=[1,.7,.5,.3,.15];
-  for(const sl of slows)for(const tu of turns){
-    const plan=[null,null];who.forEach(i=>plan[i]={turn:tu,slow:sl});
-    if(simulate(plan,DUR+1.5).minD>40)return plan;
+  const turns=S.give==='both'?[30,45,60,75]:[40,60,80,100,120];
+  const sides=S.give==='both'?[1]:[1,-1];
+  for(const side of sides)for(const sl of [1,.7,.5,.3,.15])for(const tu of turns){
+    const plan=[null,null];who.forEach(i=>plan[i]={turn:tu*side,slow:sl});
+    if(simulate(plan,DUR+1.5).ok)return {plan,ok:true};
   }
-  const plan=[null,null];who.forEach(i=>plan[i]={turn:90,slow:.2});return plan;
+  const plan=[null,null];who.forEach(i=>plan[i]={turn:90,slow:.2});return {plan,ok:false};
 }
 let anim=null;
 // bring the chart fully into view before the boats move (the answer buttons can be lower down the screen)
@@ -296,7 +337,7 @@ function showChart(then){
 }
 function play(){
   cancelAnimationFrame(anim);
-  const {frames}=simulate(bestPlan(),DUR,true);
+  const {frames}=simulate(bestPlan().plan,DUR,true);
   document.getElementById('mark').style.opacity='.25';
   const t0=performance.now();                              // the first frame can arrive just before t0, hence Math.max(0, …)
   const step=now=>{const i=Math.max(0,Math.min(frames.length-1,Math.floor((now-t0)/1000*30)));placeBoats(frames[i][0],frames[i][1]);if(i<frames.length-1)anim=requestAnimationFrame(step)};
@@ -320,7 +361,7 @@ function renderStats(){
 function newSituation(){
   cancelAnimationFrame(anim);
   // skip the rare layouts where the give-way manoeuvre can't be shown with a clear gap
-  for(let i=0;i<30;i++){S=makeSituation(st.mode);if(simulate(bestPlan(),DUR+1.5).minD>40)break}
+  for(let i=0;i<40;i++){S=makeSituation(st.mode);if(bestPlan().ok)break}
   answered=false;
   drawChart();
   document.getElementById('vrow').innerHTML=S.t.map((t,i)=>`<div class="vcard"><span class="let" style="background:${C[i]}">${LET[S.idx[i]]}</span><span><b>${t.name}</b><small>From the ${PTS[S.idx[i]]}, heading ${PTS[(S.idx[i]+8)%16]}</small></span></div>`).join('');
@@ -338,6 +379,9 @@ function answer(v){
   document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;
     if(b.dataset.v===String(S.give))b.classList.add('right');else if(b.dataset.v===String(v))b.classList.add('wrong')});
   const e=explain(S),L=S.idx.map(i=>LET[i]);
+  // if the animation has to use a port turn, say why, so it doesn't look like a mistake
+  const mv=bestPlan().plan.find(x=>x);
+  if(mv&&mv.turn<0&&S.give!=='both')e.notes.unshift(`In the animation ${L[S.give-1]} turns to port: a turn to starboard here would take her across ${L[2-S.give]}'s bow or too close to her. The aim is always to pass well clear and astern (Rules 8 and 16).`);
   const head=S.give==='both'?'Both alter to starboard':`${L[S.give-1]} gives way, ${L[2-S.give]} stands on`;
   const r=document.getElementById('result');
   r.className='result '+(ok?'ok':'bad');
