@@ -25,7 +25,7 @@ h1{font-size:clamp(1.6rem,6vw,2.2rem);color:var(--heading)}
 .stat{background:var(--surface-ivory);border:1.5px solid var(--border);border-radius:999px;padding:4px 12px;font:600 .85rem var(--font-display);color:var(--ink-muted);font-variant-numeric:tabular-nums}
 .stat b{color:var(--heading)}
 .card{background:var(--surface-ivory);border:1.5px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
-.chart{display:block;width:100%;height:auto;background:#F4FAFC}
+.chart{display:block;width:100%;height:auto;background:#FBF3E2}
 .vrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 14px 0}
 .vcard{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;padding:10px;border-radius:var(--radius-sm);background:var(--bg-elevated);border:1.5px solid var(--border)}
 .vcard .let{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 17px var(--font-display)}
@@ -63,7 +63,7 @@ h1{font-size:clamp(1.6rem,6vw,2.2rem);color:var(--heading)}
   <nav class="mg-topnav"><a class="mg-home" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9.5h5v-5.5h3v5.5h5V10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>Home</span></a></nav>
   <header>
     <h1>Who Has Right of Way?</h1>
-    <p class="sub">Two vessels are steering for the same spot. Each letter is the course she is heading. Check the wind, then decide who keeps clear.</p>
+    <p class="sub">Two vessels are steering for the same spot. Each letter shows where a vessel is coming from. Check the wind, then decide who keeps clear.</p>
   </header>
   <nav class="chips" id="chips" aria-label="Practice"></nav>
   <div class="stats"><span class="stat">Score <b id="s-score">0/0</b></span><span class="stat">Streak <b id="s-streak">0</b></span><span class="stat">Best <b id="s-best">0</b></span></div>
@@ -84,7 +84,7 @@ h1{font-size:clamp(1.6rem,6vw,2.2rem);color:var(--heading)}
 // ---------- basics ----------
 const LET='ABCDEFGHIJKLMNOP'.split('');                     // 16 courses, A = north, clockwise every 22.5°
 const PTS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
-const C=['#DE4457','#2C5F91'];                              // vessel 1 coral, vessel 2 blue
+const C=['#C8332A','#1D5FAF'];                              // vessel 1 red, vessel 2 blue (nautical chart style)
 const CX=200,CY=200;                                        // centre of the chart = where they would collide
 const rad=d=>d*Math.PI/180;
 const norm=a=>((a%360)+540)%360-180;                        // any angle -> -180..180
@@ -126,7 +126,8 @@ function makeSituation(mode){
     else{k1=pick(ALLK);k2=pick(ALLK);if(mode==='mixed'&&RANK[TYPES[k1].cat]===RANK[TYPES[k2].cat])continue}
     const t=[TYPES[k1],TYPES[k2]];
     const idx=[rnd(16),rnd(16)];if(idx[0]===idx[1])continue;
-    const h=idx.map(i=>i*22.5),wi=rnd(16),w=wi*22.5;        // w = direction the wind blows FROM
+    // letter = where she comes from, so she heads the opposite way, towards the centre
+    const h=idx.map(i=>(i*22.5+180)%360),wi=rnd(16),w=wi*22.5;        // w = direction the wind blows FROM
     const rwa=h.map(x=>norm(w-x));                          // wind angle on each bow: + starboard, - port
     // sailing vessels can't point closer than 45° to the wind, and a dead run makes the tack unclear
     if(t.some((x,i)=>x.cat==='sail'&&(Math.abs(rwa[i])<45||Math.abs(rwa[i])>157.5)))continue;
@@ -134,8 +135,8 @@ function makeSituation(mode){
     let p=h.map((x,i)=>{const v=vel(x);return [-v[0]*s[i],-v[1]*s[i]]});
     const d=p.map(q=>Math.hypot(q[0],q[1])),m=Math.max(...d);
     if(Math.min(...d)/m<.45)continue;                       // keep both vessels well away from the centre
-    const k=106/m;p=p.map(q=>[q[0]*k,q[1]*k]);
-    if(Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])<50)continue; // start far enough apart to read the picture
+    const k=88/m;p=p.map(q=>[q[0]*k,q[1]*k]);
+    if(Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])<42)continue; // start far enough apart to read the picture
     const rb12=norm(brg(p[1][0]-p[0][0],p[1][1]-p[0][1])-h[0]); // where 2 is, seen from 1 (+ = starboard)
     const rb21=norm(brg(p[0][0]-p[1][0],p[0][1]-p[1][1])-h[1]);
     const near=(x,b,tol)=>Math.abs(Math.abs(x)-b)<tol;
@@ -201,10 +202,10 @@ function vessel(t,col,rwa){
   switch(t.draw){
     case'motor':return `<path d="M-3 12 L-10 32 M3 12 L10 32" stroke="#FFFFFF" stroke-width="2" opacity=".9"/><path d="${hull(13,6)}" fill="${col}" ${HS}/><rect x="-3.5" y="-2" width="7" height="7" rx="1.5" fill="#FBF7EC"/>`;
     case'ship':return `<path d="${hull(22,7.5)}" fill="${col}" ${HS}/><rect x="-4.5" y="-13" width="9" height="6" fill="#0E2338" opacity=".3"/><rect x="-4.5" y="-5" width="9" height="6" fill="#0E2338" opacity=".3"/><rect x="-6" y="9" width="12" height="7" rx="1" fill="#FBF7EC"/>`;
-    case'tug':return `<line x1="0" y1="10" x2="0" y2="28" stroke="#16324F" stroke-width="1.2" stroke-dasharray="3 2"/><rect x="-7" y="28" width="14" height="24" rx="2" fill="#B9C9D3" stroke="#16324F"/><path d="${hull(11,6.5)}" fill="${col}" ${HS}/><rect x="-3" y="-4" width="6" height="6" rx="1" fill="#FBF7EC"/>`;
+    case'tug':return `<line x1="0" y1="10" x2="0" y2="20" stroke="#16324F" stroke-width="1.2" stroke-dasharray="3 2"/><rect x="-6.5" y="20" width="13" height="18" rx="2" fill="#B9C9D3" stroke="#16324F"/><path d="${hull(11,6.5)}" fill="${col}" ${HS}/><rect x="-3" y="-4" width="6" height="6" rx="1" fill="#FBF7EC"/>`;
     case'yacht':return `<path d="${hull(14,5)}" fill="${col}" ${HS}/>${sail(rwa,23)}`;
     case'dinghy':return `<path d="${hull(9,4)}" fill="${col}" ${HS}/>${sail(rwa,15)}`;
-    case'fishing':return `<path d="M-4 11 L-14 38 M4 11 L14 38 M-14 38 Q0 45 14 38" stroke="#16324F" stroke-width="1.1" stroke-dasharray="2 2" fill="none"/><path d="${hull(12,6)}" fill="${col}" ${HS}/><rect x="-3" y="-1" width="6" height="7" rx="1" fill="#FBF7EC"/>`;
+    case'fishing':return `<path d="M-4 11 L-12 30 M4 11 L12 30 M-12 30 Q0 36 12 30" stroke="#16324F" stroke-width="1.1" stroke-dasharray="2 2" fill="none"/><path d="${hull(12,6)}" fill="${col}" ${HS}/><rect x="-3" y="-1" width="6" height="7" rx="1" fill="#FBF7EC"/>`;
     case'dredger':return `<path d="${hull(16,7)}" fill="${col}" ${HS}/><line x1="0" y1="-2" x2="15" y2="-12" stroke="#16324F" stroke-width="2"/><rect x="12" y="-16" width="7" height="6" rx="1" fill="#16324F"/><rect x="-5" y="6" width="10" height="7" rx="1" fill="#FBF7EC"/>`;
   }
   return '';
@@ -223,11 +224,10 @@ function dayShape(s){
 function badge(t,i){
   return `<g transform="translate(0 -40)"><circle r="11" fill="${C[i]}" stroke="#FFFFFF" stroke-width="2"/><text y="4.6" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="13" fill="#FFFFFF">${LET[S.idx[i]]}</text>${t.shape?`<g transform="translate(22 0)">${dayShape(t.shape)}</g>`:''}</g>`;
 }
-function ringArrow(i,sel){
-  const h=i*22.5,v=vel(h),x=CX+v[0]*156,y=CY+v[1]*156,lx=CX+v[0]*181,ly=CY+v[1]*181;
-  const col=sel>=0?C[sel]:'#A9BCC8';
-  return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${h})"><path d="${hull(sel>=0?10:7,sel>=0?4.6:3.4)}" fill="${col}" ${sel>=0?'stroke="#0E2338" stroke-width="1"':''}/></g>
-  <g transform="translate(${lx.toFixed(1)} ${ly.toFixed(1)})"><rect x="-10" y="-10" width="20" height="20" rx="4" fill="${sel>=0?C[sel]:'#FFFFFF'}" stroke="${sel>=0?C[sel]:'#5C7A8F'}" stroke-width="1.5"/><text y="4.8" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="13" fill="${sel>=0?'#FFFFFF':'#16324F'}">${LET[i]}</text></g>`;
+function ringLetter(i,sel){
+  // a navy chart label for each of the 16 directions; the two in play take their vessel's colour
+  const v=vel(i*22.5),x=CX+v[0]*167,y=CY+v[1]*167,on=sel>=0;
+  return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="${on?15:12.5}" fill="${on?C[sel]:'#16324F'}" stroke="#FBF3E2" stroke-width="2"/><text y="${on?5.2:4.6}" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="${on?15:13}" fill="${on?'#FFFFFF':'#FBF3E2'}">${LET[i]}</text></g>`;
 }
 function windArrow(w,size){
   // arrow drawn pointing the way the wind blows (from w towards w+180)
@@ -236,17 +236,17 @@ function windArrow(w,size){
 function drawChart(){
   const el=document.getElementById('chart');
   let streaks='';for(let x=-150;x<=150;x+=30){const off=rnd(60);streaks+=`<line class="streak" x1="${x}" y1="-170" x2="${x}" y2="170" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 44" style="stroke-dashoffset:${off}px;animation-delay:-${(off/25).toFixed(2)}s"/>`}
-  let ring='';for(let i=0;i<16;i++)ring+=ringArrow(i,S.idx.indexOf(i));
+  let ring='';for(let i=0;i<16;i++)ring+=ringLetter(i,S.idx.indexOf(i));
   const tracks=S.p.map((q,i)=>`<line x1="${CX+q[0]}" y1="${CY+q[1]}" x2="${CX}" y2="${CY}" stroke="${C[i]}" stroke-width="1.6" stroke-dasharray="4 5" opacity=".75"/>`).join('');
   const boats=S.t.map((t,i)=>`<g id="v${i}"><g class="rot">${vessel(t,C[i],S.rwa[i])}</g>${badge(t,i)}</g>`).join('');
   el.innerHTML=`<defs><clipPath id="sea"><circle cx="${CX}" cy="${CY}" r="143"/></clipPath></defs>
-   <circle cx="${CX}" cy="${CY}" r="143" fill="#BFE0EA"/>
-   <g clip-path="url(#sea)"><g transform="translate(${CX} ${CY}) rotate(${S.w})" opacity=".55">${streaks}</g>
-   <circle cx="${CX}" cy="${CY}" r="95" fill="none" stroke="#FFFFFF" stroke-width="1" opacity=".5"/><circle cx="${CX}" cy="${CY}" r="48" fill="none" stroke="#FFFFFF" stroke-width="1" opacity=".5"/></g>
-   <circle cx="${CX}" cy="${CY}" r="143" fill="none" stroke="#17758F" stroke-width="2"/>
+   <circle cx="${CX}" cy="${CY}" r="143" fill="#4CC3F0"/><circle cx="${CX}" cy="${CY}" r="112" fill="#6FD0F4"/><circle cx="${CX}" cy="${CY}" r="76" fill="#93DDF7"/><circle cx="${CX}" cy="${CY}" r="40" fill="#B9EAFB"/>
+   <g transform="translate(${CX} ${CY})" opacity=".35"><polygon points="0,-62 9,0 0,62 -9,0" fill="#16324F"/><polygon points="-62,0 0,9 62,0 0,-9" fill="#16324F"/><circle r="24" fill="none" stroke="#16324F" stroke-width="1.2"/></g>
+   <g clip-path="url(#sea)"><g transform="translate(${CX} ${CY}) rotate(${S.w})" opacity=".45">${streaks}</g></g>
+   <circle cx="${CX}" cy="${CY}" r="144" fill="none" stroke="#16324F" stroke-width="2.5"/>
    ${ring}
-   <g transform="translate(36 36)"><circle r="26" fill="#FFFFFF" stroke="#17758F" stroke-width="1.5"/>${windArrow(S.w,18)}</g>
-   <text x="36" y="76" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" letter-spacing="1.5" fill="#17758F">WIND</text>
+   <g transform="translate(36 36)"><circle r="26" fill="#FBF3E2" stroke="#16324F" stroke-width="2"/>${windArrow(S.w,18)}</g>
+   <text x="36" y="76" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" letter-spacing="1.5" fill="#16324F">WIND</text>
    <text x="36" y="89" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="600" font-size="11" fill="#5C7A8F">from ${PTS[S.wi]}</text>
    ${tracks}
    <g id="mark"><circle cx="${CX}" cy="${CY}" r="10" fill="#FFFFFF" stroke="#DE4457" stroke-width="2" stroke-dasharray="3 2.5"/><text x="${CX}" y="${CY+4.5}" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="13" fill="#DE4457">!</text></g>
@@ -291,8 +291,8 @@ function play(){
   cancelAnimationFrame(anim);
   const {frames}=simulate(bestPlan(),DUR,true);
   document.getElementById('mark').style.opacity='.25';
-  const t0=performance.now();
-  const step=now=>{const i=Math.min(frames.length-1,Math.floor((now-t0)/1000*30));placeBoats(frames[i][0],frames[i][1]);if(i<frames.length-1)anim=requestAnimationFrame(step)};
+  const t0=performance.now();                              // the first frame can arrive just before t0, hence Math.max(0, …)
+  const step=now=>{const i=Math.max(0,Math.min(frames.length-1,Math.floor((now-t0)/1000*30)));placeBoats(frames[i][0],frames[i][1]);if(i<frames.length-1)anim=requestAnimationFrame(step)};
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){const f=frames[frames.length-1];placeBoats(f[0],f[1]);return}
   anim=requestAnimationFrame(step);
 }
@@ -316,7 +316,7 @@ function newSituation(){
   for(let i=0;i<30;i++){S=makeSituation(st.mode);if(simulate(bestPlan(),DUR+1.5).minD>40)break}
   answered=false;
   drawChart();
-  document.getElementById('vrow').innerHTML=S.t.map((t,i)=>`<div class="vcard"><span class="let" style="background:${C[i]}">${LET[S.idx[i]]}</span><span><b>${t.name}</b><small>Heading ${PTS[S.idx[i]]}</small></span></div>`).join('');
+  document.getElementById('vrow').innerHTML=S.t.map((t,i)=>`<div class="vcard"><span class="let" style="background:${C[i]}">${LET[S.idx[i]]}</span><span><b>${t.name}</b><small>From the ${PTS[S.idx[i]]}, heading ${PTS[(S.idx[i]+8)%16]}</small></span></div>`).join('');
   document.getElementById('wind').innerHTML=`<svg viewBox="-20 -20 40 40" aria-hidden="true">${windArrow(S.w,16)}</svg>Wind from the ${PTS[S.wi]}`;
   const A=LET[S.idx[0]],B=LET[S.idx[1]];
   const opts=[[1,`${A} gives way`,C[0],A],[2,`${B} gives way`,C[1],B],['both','Both alter course to starboard','#17758F','↻']];
