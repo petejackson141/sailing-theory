@@ -287,6 +287,13 @@ function bestPlan(){
   const plan=[null,null];who.forEach(i=>plan[i]={turn:90,slow:.2});return plan;
 }
 let anim=null;
+// bring the chart fully into view before the boats move (the answer buttons can be lower down the screen)
+function showChart(then){
+  const c=document.getElementById('chart'),r=c.getBoundingClientRect(),top=70; // leave room for the Home button
+  if(r.top>=top&&r.bottom<=innerHeight){then();return}
+  scrollTo({top:scrollY+r.top-top,behavior:'smooth'});
+  setTimeout(then,550);
+}
 function play(){
   cancelAnimationFrame(anim);
   const {frames}=simulate(bestPlan(),DUR,true);
@@ -336,12 +343,12 @@ function answer(v){
   r.className='result '+(ok?'ok':'bad');
   r.innerHTML=`<h2>${ok?'Correct!':'Not quite.'} ${head}</h2><p>${e.main}</p>${e.act?`<p>${e.act}</p>`:''}${e.notes.map(n=>`<p class="note">${n}</p>`).join('')}<span class="rule">${S.rule}</span>`;
   r.hidden=false;document.getElementById('btns').hidden=false;
-  renderStats();play();
+  renderStats();showChart(play);
 }
 document.getElementById('opts').addEventListener('click',e=>{const b=e.target.closest('.opt');if(b)answer(b.dataset.v)});
 document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;st.mode=b.dataset.m;save();newSituation()});
 document.getElementById('b-next').onclick=()=>{newSituation();window.scrollTo({top:0,behavior:'smooth'})};
-document.getElementById('b-replay').onclick=()=>{placeBoats(S.p.map(q=>[CX+q[0],CY+q[1]]),S.h);setTimeout(play,250)};
+document.getElementById('b-replay').onclick=()=>{cancelAnimationFrame(anim);placeBoats(S.p.map(q=>[CX+q[0],CY+q[1]]),S.h);showChart(()=>setTimeout(play,250))};
 newSituation();
 </script>
 <script src="../shared/js/app.js"></script>
