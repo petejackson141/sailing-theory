@@ -1,0 +1,120 @@
+/* Sailing Theory — shared theme (copied from Master GMDSS), taken from the Sail la Vie "Nautical" look:
+   Space Grotesk headings, Inter text, Playfair Display italic wordmark,
+   navy/teal/coral palette, ivory cards, pill buttons, reef gradient + depth-contour background.
+   Every module links this file first, then its own stylesheet. */
+
+:root{
+  /* Sail la Vie palette */
+  --bg:#EAF6F5; --bg-elevated:#FFFFFF; --bg-sunk:#E3EBF0;
+  --ink:#142B44; --ink-muted:#5C7A8F; --ink-faint:#93A9B8;
+  --navy:#16324F; --navy-deep:#0E2338; --navy-soft:#2C5F91;
+  --gold:#C9A24B; --water:#BFE0EA; --coral:#DE4457; --coral-deep:#C23348;
+  --teal:#17758F; --sunset-orange:#FB8258;
+  --pastel-blue:#E9F5FD; --pastel-mint:#E7F7F2; --pastel-cream:#FEF5E1; --pastel-rose:#FDEDF0;
+  --surface-ivory:#FBF7EC; --sheet-bg:#EFEAE0;
+  --border:#DAE4EA; --shadow:0 10px 30px -12px rgba(20,43,68,0.25);
+  --radius-lg:26px; --radius-md:18px; --radius-sm:12px;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-wordmark:'Playfair Display',Georgia,serif;
+  --bg-gradient:linear-gradient(180deg,#C7ECFC 0%,#D7EFEC 22%,#F0D2BA 46%,#A9E3CE 68%,#24BCB0 88%,#1CA79B 100%);
+  --contour-opacity:.08;
+
+  /* names used inside the modules, mapped onto the palette above */
+  --paper:var(--surface-ivory); --muted:var(--ink-muted); --line:var(--border);
+  --accent:var(--coral); --accent-soft:#FBE3E6; --sea:var(--teal); --sea-soft:#E1F1F4;
+  --ok:#1E8A5A; --ok-soft:#E3F4EC; --bad:var(--coral-deep); --bad-soft:#FBE4E6; --hi:var(--pastel-cream);
+  --f-display:var(--font-display); --f-body:var(--font-body); --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  --btn-primary:linear-gradient(90deg,var(--navy),var(--teal));
+  --heading:var(--navy);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1622; --bg-elevated:#122236; --bg-sunk:#0E1B2A;
+  --ink:#E9F0F5; --ink-muted:#8FA8BC; --ink-faint:#5C7488;
+  --navy:#2C5F91; --navy-deep:#16324F; --navy-soft:#3E76AC;
+  --gold:#D9BB6E; --water:#1D3A4E; --coral:#E1725F; --coral-deep:#C85742;
+  --teal:#3FA9C2; --sunset-orange:#E1725F;
+  --pastel-blue:#132C42; --pastel-mint:#0F3030; --pastel-cream:#2C2819; --pastel-rose:#33202A;
+  --surface-ivory:var(--bg-elevated); --sheet-bg:var(--bg);
+  --border:#1E3448; --shadow:0 10px 30px -12px rgba(0,0,0,0.5);
+  --bg-gradient:var(--bg); --contour-opacity:.032;
+  --accent-soft:#3a2219; --sea-soft:#14303f; --ok:#5fcf7a; --ok-soft:#173222; --bad-soft:#3a1c1b;
+  --heading:var(--ink);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1622; --bg-elevated:#122236; --bg-sunk:#0E1B2A;
+  --ink:#E9F0F5; --ink-muted:#8FA8BC; --ink-faint:#5C7488;
+  --navy:#2C5F91; --navy-deep:#16324F; --navy-soft:#3E76AC;
+  --gold:#D9BB6E; --water:#1D3A4E; --coral:#E1725F; --coral-deep:#C85742;
+  --teal:#3FA9C2; --sunset-orange:#E1725F;
+  --pastel-blue:#132C42; --pastel-mint:#0F3030; --pastel-cream:#2C2819; --pastel-rose:#33202A;
+  --surface-ivory:var(--bg-elevated); --sheet-bg:var(--bg);
+  --border:#1E3448; --shadow:0 10px 30px -12px rgba(0,0,0,0.5);
+  --bg-gradient:var(--bg); --contour-opacity:.032;
+  --accent-soft:#3a2219; --sea-soft:#14303f; --ok:#5fcf7a; --ok-soft:#173222; --bad-soft:#3a1c1b;
+  --heading:var(--ink);
+  color-scheme:dark}
+
+/* background: reef gradient with the faint depth contours of a nautical chart on top */
+*{box-sizing:border-box}
+html{background-color:var(--bg);min-height:100%}
+html::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:var(--bg-gradient)}
+body{margin:0;background:transparent;color:var(--ink);font:15px/1.5 var(--font-body);-webkit-font-smoothing:antialiased;isolation:isolate;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url("../img/contour.svg") center/cover no-repeat;opacity:var(--contour-opacity)}
+@media print{html{background:#fff}html::before,body::before{display:none}}
+h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+p{margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+/* shared pieces */
+.mg-wordmark{font-family:var(--font-wordmark);font-style:italic;font-weight:700;color:var(--navy)}
+.eyebrow{font-family:var(--font-display);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}
+.section-divider{display:flex;align-items:center;gap:12px;color:var(--navy)}
+.section-divider::before,.section-divider::after{content:"";flex:1;height:1.5px;background:currentColor;opacity:.5}
+.section-divider span{font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.tint-blue{background:var(--pastel-blue)!important;border-color:var(--navy-soft)!important}
+.tint-mint{background:var(--pastel-mint)!important;border-color:var(--teal)!important}
+.tint-cream{background:var(--pastel-cream)!important;border-color:var(--gold)!important}
+.tint-rose{background:var(--pastel-rose)!important;border-color:var(--coral)!important}
+.mg-back{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);text-decoration:none}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .section-divider{color:var(--ink-muted)}}
+:root[data-theme="dark"] .section-divider{color:var(--ink-muted)}
+
+/* the Home button at the top of every module page: always visible while scrolling */
+.mg-topnav{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:60;display:flex;pointer-events:none}
+.mg-home{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px 0 14px;border-radius:999px;
+  background:var(--surface-ivory);border:1.5px solid var(--teal);color:var(--heading);font:600 15px var(--font-body);text-decoration:none;box-shadow:var(--shadow)}
+.mg-home svg{width:20px;height:20px;color:var(--teal)}
+.mg-home:active{transform:scale(.97)}
+@media print{.mg-topnav{display:none}}
+
+/* a second pill next to Home that goes back to the section menu (Simulators, Exams, Study) */
+.mg-topnav{gap:8px}
+.mg-up{padding:0 16px 0 12px;border-color:var(--border)}
+.mg-up span[aria-hidden]{font-size:20px;line-height:1;color:var(--teal);margin-top:-2px}
+
+/* section menu pages (Study, Simulators, Exams, Scenarios): a heading, then one row per item */
+.mg-hub{max-width:560px;margin:0 auto;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:calc(env(safe-area-inset-top,0px) + 18px) 48px;display:grid;gap:14px}
+.mg-hub header h1{font-size:clamp(1.9rem,6vw,2.4rem);color:var(--heading)}
+.mg-hub header p{color:var(--ink-muted);margin-top:6px}
+.mg-list{display:grid;gap:10px}
+.mg-item{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:14px;align-items:center;min-height:76px;padding:12px 14px;border-radius:var(--radius-md);
+  background:var(--surface-ivory);border:1.5px solid var(--border);box-shadow:var(--shadow);color:var(--ink);text-decoration:none}
+.mg-item svg{width:52px;height:52px}
+.mg-item b{display:block;font:700 16px var(--font-display);color:var(--heading)}
+.mg-item small{display:block;font-size:13px;color:var(--ink-muted);line-height:1.35;margin-top:2px}
+.mg-item::after{content:"›";font-size:26px;color:var(--teal);line-height:1}
+a.mg-item:active{transform:scale(.985)}
+.mg-item.soon{opacity:.62;box-shadow:none}
+.mg-item.soon::after{content:none}
+.mg-tag{padding:3px 9px;border-radius:999px;font:700 10px var(--font-display);letter-spacing:.06em;text-transform:uppercase;background:var(--navy);color:#fff;white-space:nowrap}
+.mg-note{font-size:13px;color:var(--ink-muted);text-align:center}
+.mg-note a{color:var(--teal);font-weight:600}
+
+/* menu icons are drawn in the light palette; in dark mode they sit on a light chip so the navy parts stay visible */
+.mg-item svg,.qcard svg{border-radius:14px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mg-item svg,:root:not([data-theme="light"]) .qcard svg{background:#DCE8EF;padding:4px}}
+:root[data-theme="dark"] .mg-item svg,:root[data-theme="dark"] .qcard svg{background:#DCE8EF;padding:4px}

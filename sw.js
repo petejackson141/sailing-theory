@@ -1,10 +1,15 @@
-// Lights & Signals service worker.
+// Sailing Theory service worker.
 // Bump CACHE_NAME on every update you push, so phones pick up the new version.
-const CACHE_NAME = 'lights-signals-v3';
+const CACHE_NAME = 'sailing-theory-v4';
 const APP_FILES = [
   './',
   './index.html',
   './manifest.json',
+  './shared/css/base.css',
+  './shared/js/app.js',
+  './shared/img/contour.svg',
+  './lights-signals/',
+  './lights-signals/index.html',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-512-maskable.png',

@@ -2,632 +2,75 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lights &amp; Signals</title>
-<meta name="description" content="Learn pages, flashcards and quiz for navigation lights, day shapes, sound signals and code flags.">
-<meta name="theme-color" content="#10212f">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sailing Theory</title>
+<meta name="description" content="Sailing theory: collision regulations, lights, sounds, day signs and flags, maneuvers, open sea, cheat sheets.">
+<meta name="theme-color" content="#16324F">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Lights &amp; Signals">
+<meta name="apple-mobile-web-app-title" content="Sailing Theory">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="shared/css/base.css">
+<style>
+/* Home: wordmark, then one big button per section (same layout as Master GMDSS) */
+main{max-width:520px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 26px) max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));display:grid;gap:14px}
+.logo{width:84px;height:84px;margin:4px auto 0;display:block;border-radius:22px;box-shadow:var(--shadow)}
+.mg-wordmark{font-size:40px;text-align:center;margin:8px 0 0}
+.tagline{text-align:center;color:var(--ink-muted);font-size:14px;margin-bottom:6px}
+.hubs{display:grid;gap:10px}
+.hubbtn{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:64px;padding:8px 20px 8px 14px;border-radius:999px;text-decoration:none;
+  color:#fff;background:var(--btn-primary);box-shadow:0 12px 24px -10px rgba(22,50,79,.5)}
+.hubbtn svg{width:44px;height:44px;background:#FBF7EC;border-radius:50%;padding:5px}
+.hubbtn b{display:block;font:700 17px var(--font-display);letter-spacing:.01em}
+.hubbtn::after{content:"›";font-size:26px;line-height:1;opacity:.9}
+a.hubbtn:active{transform:scale(.985)}
+/* sections not built yet: same button, faded, with a "Coming soon" tag instead of the arrow */
+.hubbtn.soon{opacity:.55;box-shadow:none;cursor:default}
+.hubbtn.soon::after{content:"Coming soon";font:700 10px var(--font-display);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);white-space:nowrap;opacity:1}
+.install-row{display:grid;justify-items:center;gap:6px}
+.install{height:44px;padding:0 22px;border-radius:999px;border:1.5px solid var(--coral);background:var(--pastel-rose);color:var(--coral-deep);font:700 14px var(--font-body)}
+.ioshint{font-size:12px;color:var(--ink-muted);text-align:center}
+footer{color:var(--ink-muted);font-size:12px;text-align:center;margin-top:10px;display:grid;gap:2px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mg-wordmark{color:var(--gold)}}
+:root[data-theme="dark"] .mg-wordmark{color:var(--gold)}
+</style>
 </head>
 <body>
-<style>
-/* Layout: one centred study column — header, set chips, a single card with its picture panel, then the grading bar */
-:root{
-  --bg:#e9eef1; --surface:#f8fafb; --ink:#10212f; --muted:#526472; --line:#cbd5dc;
-  --accent:#c8331f; --accent-ink:#ffffff; --good:#1d7a4c; --chip:#dde5ea;
-  --display:"Rubik","IBM Plex Sans Hebrew",system-ui,sans-serif;
-  --body:"IBM Plex Sans Hebrew","Rubik",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,monospace;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0c151d; --surface:#14212c; --ink:#e7eef3; --muted:#93a6b4; --line:#26384a;
-  --accent:#ff6a4d; --accent-ink:#1a0c08; --good:#4fd194; --chip:#1c2c3a; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0c151d; --surface:#14212c; --ink:#e7eef3; --muted:#93a6b4; --line:#26384a;
-  --accent:#ff6a4d; --accent-ink:#1a0c08; --good:#4fd194; --chip:#1c2c3a; color-scheme:dark}
-html,body{background:var(--bg);color:var(--ink)}
-body{font-family:var(--body);font-size:16px;line-height:1.5;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
-.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-h1{font-family:var(--display);font-weight:700;font-size:1.6rem;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
-.sub{color:var(--muted);font-size:.9rem;margin:4px 0 0}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
-.lang button{border:0;background:transparent;color:var(--muted);font:600 .85rem var(--display);padding:6px 12px;cursor:pointer}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid transparent;background:var(--chip);color:var(--ink);font:500 .9rem var(--display);padding:7px 14px;border-radius:999px;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
-.chip .n{font-family:var(--mono);font-size:.75rem;opacity:.7;margin-inline-start:6px}
-.stats{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.stats .tools{display:flex;gap:6px}
-.link{background:none;border:0;color:var(--ink);font:500 .85rem var(--display);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 6px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-.viz-wrap{position:relative}
-.viz{display:block;width:100%;height:auto;max-width:100%}
-.cat{position:absolute;top:10px;inset-inline-start:12px;font:500 .7rem var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(0,0,0,.45);color:#fff}
-.q{padding:14px 18px 0;font-family:var(--display);font-weight:600;font-size:1.05rem}
-.body{padding:12px 18px 18px;display:flex;flex-direction:column;gap:12px}
-.answer{border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px}
-.answer .a{font-family:var(--display);font-weight:600;font-size:1.2rem;line-height:1.3;text-wrap:balance}
-.answer .d{color:var(--muted);font-size:.95rem}
-.answer .rule{font:500 .75rem var(--mono);color:var(--muted);letter-spacing:.04em}
-.btn{border:0;border-radius:12px;font:600 1rem var(--display);padding:13px 16px;cursor:pointer}
-.btn:focus-visible,.chip:focus-visible,.lang button:focus-visible,.link:focus-visible,.play:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.reveal{background:var(--ink);color:var(--bg);width:100%}
-.grade{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.again{background:var(--chip);color:var(--ink)}
-.got{background:var(--good);color:var(--bg)}
-.pattern{display:flex;flex-wrap:wrap;align-items:center;gap:8px;direction:ltr}
-.blip{display:inline-block;background:var(--ink);border-radius:999px;height:12px}
-.blip.s{width:12px}.blip.c{width:130px}.blip.f{width:14px;height:14px;background:#f3c64a;box-shadow:0 0 8px #f3c64a}.blip.l{width:46px}
-.tag{font:500 .75rem var(--mono);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink)}
-.play{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:2px solid #f3c64a;background:rgba(243,198,74,.12);color:#f3c64a;font:600 .85rem var(--display);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px}
-.play svg{width:26px;height:26px}
-.mode{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--chip);border-radius:12px;padding:4px;gap:4px}
-.mode button{border:0;border-radius:9px;background:transparent;color:var(--muted);font:600 .95rem var(--display);padding:9px;cursor:pointer}
-.mode button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
-.qlabel{display:block;font:500 .8rem var(--body);color:var(--muted);margin-bottom:2px}
-.opts{display:flex;flex-direction:column;gap:8px}
-.opts.grid{display:grid;grid-template-columns:1fr 1fr}
-.opt{display:flex;align-items:center;gap:10px;text-align:start;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:11px 12px;font:500 .95rem var(--body);cursor:pointer;min-width:0}
-.opt.pic{flex-direction:column;align-items:stretch;padding:8px}
-.opt .ok{font:500 .75rem var(--mono);color:var(--muted);flex:none}
-.opt.pic .ok{align-self:flex-start}
-.opt:hover:not([disabled]){border-color:var(--ink)}
-.opt[disabled]{cursor:default;opacity:.55}
-.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--bg));opacity:1}
-.opt.wrong{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--bg));opacity:1}
-.opt:focus-visible,.mode button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.wrap.wide{max-width:1040px}
-.learn{display:flex;flex-direction:column;gap:14px}
-.learn h2{font:700 1.15rem var(--display);margin:10px 0 0}
-.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.li{display:grid;grid-template-columns:116px minmax(0,1fr);gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px}
-.li .viz{border-radius:8px}
-.ltx{display:flex;flex-direction:column;gap:3px;min-width:0}
-.ltx b{font:600 .95rem var(--display);line-height:1.3}
-.lnum{font:500 .7rem var(--mono);color:var(--muted);letter-spacing:.03em}
-.ld{font-size:.85rem;color:var(--muted);line-height:1.4}
-.zoom{display:block;padding:0;border:0;background:none;cursor:zoom-in;border-radius:8px;overflow:hidden}
-.zoom:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.lb{position:fixed;inset:0;z-index:50;background:#04090f;color:#eef3f7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-  padding:calc(56px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow-y:auto}
-.lb-body{width:100%;max-width:760px;display:flex;flex-direction:column;gap:10px;cursor:zoom-out}
-.lb-body .viz{border-radius:14px;width:100%;max-height:62vh;object-fit:contain}
-.lb-body .lnum{color:#9fb2c1}
-.lb-body b{font:600 1.25rem var(--display);line-height:1.3;text-wrap:balance}
-.lb-body .ld{font-size:1rem;color:#c3d0da;line-height:1.5}
-.lb-btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;width:44px;height:44px;font:600 1.6rem/1 var(--display);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.lb-btn:focus-visible{outline:3px solid #f3c64a;outline-offset:2px}
-.lb-x{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px))}
-.lb-nav{display:flex;align-items:center;gap:16px;font:500 .85rem var(--mono);color:#9fb2c1;font-variant-numeric:tabular-nums}
-.done{padding:28px 18px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
-.keys{font-size:.8rem;color:var(--muted);text-align:center}
-.keys kbd{font:500 .75rem var(--mono);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
-.blink{animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:.08}}
-@media (prefers-reduced-motion:reduce){.blink{animation-duration:2s}}
-@media (max-width:420px){h1{font-size:1.35rem}.keys{display:none}}
-</style>
+<main>
+  <img class="logo" src="icons/icon-192.png" alt="">
+  <h1 class="mg-wordmark">Sailing Theory</h1>
+  <p class="tagline">Rules of the road and seamanship, ready for your class</p>
 
-<div class="wrap">
-  <header>
-    <div>
-      <h1 id="t-title"></h1>
-      <p class="sub" id="t-sub"></p>
-    </div>
-    <div class="lang" role="group" aria-label="Language" hidden>
-      <button id="lang-en" type="button">EN</button>
-      <button id="lang-he" type="button">עב</button>
-    </div>
-  </header>
-  <div class="mode" role="group" aria-label="Mode"><button id="mode-learn" type="button"></button><button id="mode-cards" type="button"></button><button id="mode-quiz" type="button"></button></div>
-  <nav class="chips" id="chips" aria-label="Card set"></nav>
-  <div class="stats"><span id="count"></span><span class="tools"><button class="link" id="shuffle" type="button"></button><button class="link" id="reset" type="button"></button></span></div>
-  <section class="card" id="card" aria-live="polite"></section>
-  <section class="learn" id="learn" hidden></section>
-  <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Enlarged picture" hidden>
-    <button class="lb-btn lb-x" id="lb-x" type="button" aria-label="Close">&times;</button>
-    <div class="lb-body" id="lb-body"></div>
-    <div class="lb-nav"><button class="lb-btn" id="lb-prev" type="button" aria-label="Previous">&#8249;</button><span id="lb-pos"></span><button class="lb-btn" id="lb-next" type="button" aria-label="Next">&#8250;</button></div>
+  <nav class="hubs" aria-label="Sections">
+    <!-- Collision regulations: two boats on crossing courses -->
+    <div class="hubbtn soon" aria-disabled="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 34h16l-3 5H10z" fill="#16324F"/><path d="M14 33V14l7 19z" fill="#DE4457"/><path d="M28 22h14l-3 5h-8z" fill="#17758F"/><path d="M35 21V6l6 15z" fill="#C9A24B"/><path d="M24 40c4-6 8-9 13-10" stroke="#5C7A8F" stroke-width="2" stroke-dasharray="3 3" fill="none" stroke-linecap="round"/></svg><span><b>Collision Regulations – Right of Way</b></span></div>
+
+    <!-- Lights, sounds, day signs and flags: the module that's already built -->
+    <a class="hubbtn" href="lights-signals/"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="5" width="38" height="38" rx="10" fill="#0D1C2C"/><circle cx="17" cy="16" r="7" fill="#ff3d2e" opacity=".3"/><circle cx="17" cy="16" r="3.5" fill="#ff3d2e"/><circle cx="31" cy="16" r="7" fill="#27f08a" opacity=".3"/><circle cx="31" cy="16" r="3.5" fill="#27f08a"/><circle cx="24" cy="29" r="7" fill="#fff3d6" opacity=".3"/><circle cx="24" cy="29" r="3.5" fill="#fff3d6"/><rect x="11" y="36" width="6" height="3" rx="1.5" fill="#BFE0EA"/><rect x="20" y="36" width="17" height="3" rx="1.5" fill="#BFE0EA"/></svg><span><b>Lights, Sounds, Day Signs &amp; Flags</b></span></a>
+
+    <!-- Maneuvers: tacking zig-zag course -->
+    <div class="hubbtn soon" aria-disabled="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 42l10-10-6-8 12-6-4-8" stroke="#17758F" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 10l4-6 4 7z" fill="#17758F"/><circle cx="10" cy="42" r="3" fill="#DE4457"/><path d="M34 34a8 8 0 1 0 0-12" stroke="#C9A24B" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M30 19l5 2-2 5" stroke="#C9A24B" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Maneuvers</b></span></div>
+
+    <!-- Open sea: horizon, sun and waves -->
+    <div class="hubbtn soon" aria-disabled="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="31" cy="20" r="8" fill="#FB8258"/><rect x="4" y="25" width="40" height="19" rx="4" fill="#17758F"/><path d="M6 31c4-3 7-3 11 0s7 3 11 0 7-3 11 0M6 38c4-3 7-3 11 0s7 3 11 0 7-3 11 0" stroke="#BFE0EA" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M10 24h9l-2 2h-5z" fill="#16324F"/><path d="M14 23V13l5 10z" fill="#FBF7EC" stroke="#16324F" stroke-width="1"/></svg><span><b>Open Sea</b></span></div>
+
+    <!-- Cheat sheets: open book (same as Master GMDSS Study) -->
+    <div class="hubbtn soon" aria-disabled="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 11c6-2 12-2 18 2v28c-6-4-12-4-18-2z" fill="#C9A24B"/><path d="M42 11c-6-2-12-2-18 2v28c6-4 12-4 18-2z" fill="#16324F"/><path d="M10 18c3-.8 6-.6 10 1M10 24c3-.8 6-.6 10 1M28 19c4-1.6 7-1.8 10-1M28 25c4-1.6 7-1.8 10-1" stroke="#FBF7EC" stroke-width="1.8" stroke-linecap="round"/></svg><span><b>Cheat Sheets</b></span></div>
+
+    <!-- General: compass rose -->
+    <div class="hubbtn soon" aria-disabled="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" fill="#FBF7EC" stroke="#16324F" stroke-width="2.4"/><path d="M24 7l4 17h-8z" fill="#DE4457"/><path d="M24 41l-4-17h8z" fill="#16324F"/><path d="M7 24l17-3v6zM41 24l-17 3v-6z" fill="#93A9B8"/><circle cx="24" cy="24" r="2.6" fill="#C9A24B"/></svg><span><b>General</b></span></div>
+  </nav>
+
+  <div class="install-row">
+    <button class="install" data-install hidden>Install app</button>
+    <span class="ioshint" data-ios-hint hidden>To install on iPhone: tap Share, then “Add to Home Screen”.</span>
   </div>
-  <p class="keys" id="keys"></p>
-</div>
-
-<script>
-// ---------- copy ----------
-const T={
- en:{title:'Lights & Signals',sub:'Flashcards for navigation lights, day shapes, sound signals and code flags (COLREGs, IALA A).',
-  all:'All',lights:'Lights',shapes:'Day shapes',sounds:'Sounds',flags:'Flags',
-  show:'Show answer',again:'Again',got:'Got it',left:'left',known:'known',shuffle:'Shuffle',reset:'Start over',
-  play:'Play',stop:'Stop',done:'Every card in this set is marked as known.',studyAgain:'Study this set again',
-  keys:'<kbd>Space</kbd> show answer · <kbd>1</kbd> again · <kbd>2</kbd> got it',
-  v:{ahead:'At night, seen from ahead. What is it?',left:'At night, heading to your left. What is it?',right:'At night, heading to your right. What is it?',astern:'At night, seen from astern. What is it?',any:'At night. What is it?'},
-  shapeQ:'By day. What does this signal?',
-  sq:{sight:'Sound signal, vessels in sight of each other. What does it mean?',fog:'Sound signal in restricted visibility. What does it mean?',any:'Sound signal. What does it mean?'},
-  flagQ:'Code flag. What does it mean?',modeLearn:'Learn',learnHead:{L:'Lights at night',D:'Day shapes',S:'Sound signals',F:'Flags'},lightQ:'Light signal between vessels in sight. What does it mean?',rev:'reverse',revQ:{D:'Which day shape shows:',F:'Which flag signal means:',S:'Which signal is given:'},modeCards:'Flashcards',modeQuiz:'Quiz',correct:'correct',score:'Score:',newQuiz:'New quiz',next:'Next',qkeys:'<kbd>1</kbd>–<kbd>4</kbd> answer · <kbd>Enter</kbd> next',catNames:{L:'Lights',D:'Day shape',S:'Signal',F:'Flag'}},
- he:{title:'אורות ואותות',sub:'כרטיסיות לאורות ניווט, צורות יום, אותות קול ודגלי קוד (COLREGs, IALA A).',
-  all:'הכל',lights:'אורות',shapes:'צורות יום',sounds:'אותות קול',flags:'דגלים',
-  show:'הצג תשובה',again:'שוב',got:'ידעתי',left:'נותרו',known:'ידועים',shuffle:'ערבב',reset:'התחל מחדש',
-  play:'השמע',stop:'עצור',done:'כל הכרטיסים בקבוצה זו מסומנים כידועים.',studyAgain:'למד את הקבוצה שוב',
-  keys:'<kbd>רווח</kbd> הצג תשובה · <kbd>1</kbd> שוב · <kbd>2</kbd> ידעתי · <kbd>P</kbd> השמע',
-  v:{ahead:'בלילה, מבט מלפנים. מה זה?',left:'בלילה, מפליג שמאלה. מה זה?',right:'בלילה, מפליג ימינה. מה זה?',astern:'בלילה, מבט מאחור. מה זה?',any:'בלילה. מה זה?'},
-  shapeQ:'ביום. מה מסמנת הצורה?',
-  sq:{sight:'כלי שיט בראייה הדדית. מה המשמעות?',fog:'ראות מוגבלת. מה זה?',any:'בכל ראות. מה המשמעות?'},
-  flagQ:'דגל קוד. מה משמעותו?',modeLearn:'לימוד',learnHead:{L:'אורות לילה',D:'סימני יום',S:'אותות קוליים',F:'דגלים'},lightQ:'אות אור בין כלי שיט בראייה. מה המשמעות?',rev:'הפוך',revQ:{D:'איזו צורת יום מסמנת:',F:'איזה אות דגלים משמעותו:',S:'איזה אות ניתן:'},modeCards:'כרטיסיות',modeQuiz:'מבחן',correct:'נכונות',score:'ציון:',newQuiz:'מבחן חדש',next:'הבא',qkeys:'<kbd>1</kbd>–<kbd>4</kbd> תשובה · <kbd>Enter</kbd> הבא · <kbd>P</kbd> השמע',catNames:{L:'אורות',D:'צורת יום',S:'אות',F:'דגל'}}
-};
-
-// ---------- data ----------
-// ---- Lights: exactly the syllabus list (73 items). View: ahead | astern | left (bow left, port side shown) | right (bow right, starboard side shown) | any
-const VT={
- P:{rule:'Rule 23',mast:1,sides:1,stern:1,en:'Power-driven vessel under 50 m, making way',he:'כלי שיט מונע עד 50 מ\', עושה דרך במים',nen:'If she shows you her red and is crossing from your starboard side, you give way.',nhe:'אם רואים את האדום שלו והוא חוצה מימינך, עליך לפנות.'},
- PL:{rule:'Rule 23',mast:2,sides:1,stern:1,en:'Power-driven vessel over 50 m, making way',he:'כלי שיט מונע מעל 50 מ\', עושה דרך במים',nen:'The aft masthead light is higher, so the pair shows which way she is heading.',nhe:'אור התורן האחורי גבוה יותר, כך שהזוג מראה לאן הוא פונה.'},
- SV:{rule:'Rule 25',sides:1,stern:1,en:'Sailing vessel making way',he:'מפרשית עושה דרך במים',nen:'No masthead light.',nhe:'אין אור תורן.'},
- SRG:{rule:'Rule 25',ar:['R','G'],sides:1,stern:1,en:'Sailing vessel over 20 m making way',he:'מפרשית מעל 20 מ\' עושה דרך במים',nen:'Red over green, sailing machine. Over 20 m she may not use a tricolour lantern.',nhe:'אדום מעל ירוק = מפרשית. מעל 20 מ\' אסור פנס תלת-צבעי.'},
- T:{rule:'Rule 24',stack:2,sides:1,stern:1,tow:1,en:'Power-driven vessel towing, tow 200 m or less',he:'כלי שיט גורר, אורך הגרירה עד 200 מ\'',nen:'Two masthead lights in a vertical line; yellow towing light above the sternlight.',nhe:'שני אורות תורן בקו אנכי; אור גרירה צהוב מעל אור הירכתיים.'},
- TB:{rule:'Rule 24',stack:2,aftmast:1,sides:1,stern:1,tow:1,en:'Towing vessel over 50 m, tow 200 m or less',he:'כלי שיט גורר מעל 50 מ\', אורך הגרירה עד 200 מ\'',nen:'Two masthead lights forward plus the aft masthead light of a vessel over 50 m.',nhe:'שני אורות תורן קדמיים ואור התורן האחורי של כלי שיט מעל 50 מ\'.'},
- TL:{rule:'Rule 24',stack:3,sides:1,stern:1,tow:1,en:'Power-driven vessel towing, tow over 200 m',he:'כלי שיט גורר, אורך הגרירה מעל 200 מ\'',nen:'Three masthead lights in a vertical line.',nhe:'שלושה אורות תורן בקו אנכי.'},
- PU:{rule:'Rule 24',stack:2,sides:1,stern:1,en:'Vessel pushing another vessel ahead',he:'כלי שיט הדוחף כלי שיט אחר לפניו',nen:'Two masthead lights in a vertical line, no towing light. The pushed vessel shows sidelights at her forward end.',nhe:'שני אורות תורן בקו אנכי, ללא אור גרירה. הנדחף מציג אורות צד בקצהו הקדמי.'},
- TR:{rule:'Rule 26',ar:['G','W'],mast:1,sides:1,stern:1,en:'Vessel trawling, making way',he:'מכמורתן בעבודה, עושה דרך במים',nen:'Green over white, trawling tonight. The masthead light aft is compulsory over 50 m.',nhe:'ירוק מעל לבן = מכמורת. אור התורן מאחור חובה מעל 50 מ\'.'},
- F:{rule:'Rule 26',ar:['R','W'],sides:1,stern:1,en:'Vessel fishing with nets (not trawling), making way',he:'כלי שיט העוסק בדיג ברשתות, עושה דרך במים',nen:'Red over white, fishing tonight.',nhe:'אדום מעל לבן = דיג.'},
- N:{rule:'Rule 27',ar:['R','R'],sides:1,stern:1,en:'Vessel not under command, making way',he:'כלי שיט ללא שליטה, עושה דרך במים',nen:'Red over red, the captain is dead.',nhe:'אדום מעל אדום = ללא שליטה.'},
- RAM:{rule:'Rule 27',ar:['R','W','R'],mast:1,sides:1,stern:1,en:'Vessel restricted in her ability to manoeuvre, making way',he:'כלי שיט מוגבל בכושרו לתמרן, עושה דרך במים',nen:'Red-white-red.',nhe:'אדום-לבן-אדום.'},
- RAML:{rule:'Rule 27',ar:['R','W','R'],mast:2,sides:1,stern:1,en:'Vessel over 50 m restricted in her ability to manoeuvre, making way',he:'כלי שיט מעל 50 מ\' מוגבל בכושרו לתמרן, עושה דרך במים',nen:'Red-white-red plus two masthead lights.',nhe:'אדום-לבן-אדום ושני אורות תורן.'},
- RAMS:{rule:'Rule 27',ar:['R','W','R'],en:'Vessel engaged in diving or underwater work',he:'כלי שיט העוסק בצלילה / עבודות תת-מימיות',nen:'Red-white-red only, because she is not making way.',nhe:'אדום-לבן-אדום בלבד, כי אינו עושה דרך.'},
- RAMT:{rule:'Rules 24, 27',ar:['R','W','R'],stack:2,sides:1,stern:1,tow:1,en:'Towing vessel restricted in her ability to manoeuvre, tow 200 m or less',he:'כלי שיט גורר מוגבל בכושרו לתמרן, אורך הגרירה עד 200 מ\'',nen:'Towing lights plus red-white-red.',nhe:'אורות גרירה ואדום-לבן-אדום.'},
- RAMTL:{rule:'Rules 24, 27',ar:['R','W','R'],stack:3,sides:1,stern:1,tow:1,en:'Towing vessel restricted in her ability to manoeuvre, tow over 200 m',he:'כלי שיט גורר מוגבל בכושרו לתמרן, אורך הגרירה מעל 200 מ\'',nen:'Three masthead lights plus red-white-red.',nhe:'שלושה אורות תורן ואדום-לבן-אדום.'},
- DR:{rule:'Rule 27',ar:['R','W','R'],mast:1,sides:1,stern:1,en:'Dredger making way',he:'מחפר העושה דרך במים',nen:'Red-white-red; two reds on the obstructed side, two greens on the side to pass.',nhe:'אדום-לבן-אדום; שני אדומים בצד החסום, שני ירוקים בצד שבו עוברים.'},
- CBD:{rule:'Rule 28',ar:['R','R','R'],mast:1,sides:1,stern:1,en:'Vessel constrained by her draught, making way',he:'כלי שיט מוגבל בשל שוקעו, עושה דרך במים',nen:'Three reds in a vertical line.',nhe:'שלושה אדומים בקו אנכי.'},
- CBDL:{rule:'Rule 28',ar:['R','R','R'],mast:2,sides:1,stern:1,en:'Vessel over 50 m constrained by her draught, making way',he:'כלי שיט מעל 50 מ\' מוגבל בשל שוקעו, עושה דרך במים',nen:'Three reds plus two masthead lights.',nhe:'שלושה אדומים ושני אורות תורן.'},
- PIL:{rule:'Rule 29',ar:['W','R'],sides:1,stern:1,en:'Pilot vessel on duty, making way',he:'כלי שיט שיש עליו נתב (נתב בתפקיד), עושה דרך במים',nen:'White over red, pilot ahead.',nhe:'לבן מעל אדום = נתב.'},
- A:{rule:'Rules 23, 25, 30',single:1,en:'A single white light',he:'אור לבן בודד',nen:'It can be a sternlight, a vessel under 7 m doing under 7 knots, a vessel at anchor or a rowing boat. Watch whether it moves.',nhe:'יכול להיות אור ירכתיים, כלי שיט קטן מ-7 מ\' ומהירותו קטנה מ-7 קשר, כלי שיט מעוגן או סירת משוטים. בדוק אם הוא זז.'},
- AL:{rule:'Rule 30',anchor:2,en:'Vessel over 50 m at anchor',he:'כלי שיט מעל 50 מ\' מעוגן',nen:'The forward anchor light is higher than the aft one.',nhe:'אור העוגן הקדמי גבוה מהאחורי.'},
- G:{rule:'Rule 30',ar:['R','R'],single:1,en:'Vessel under 50 m aground',he:'כלי שיט מתחת ל-50 מ\' על שרטון',nen:'Anchor light plus two reds.',nhe:'אור עוגן ושני אדומים.'},
- GL:{rule:'Rule 30',ar:['R','R'],anchor:2,en:'Vessel over 50 m aground',he:'כלי שיט מעל 50 מ\' על שרטון',nen:'Two anchor lights plus two reds.',nhe:'שני אורות עוגן ושני אדומים.'},
- H:{rule:'Rule 23',mast:1,sides:1,stern:1,flash:'Y',en:'High-speed non-displacement craft (hovercraft)',he:'כלי שיט מהיר, חסר הדחק (רחפת)',nen:'Power-driven lights plus a flashing yellow all-round light.',nhe:'אורות כלי שיט מונע ואור סביבי צהוב מהבהב.'},
- M:{rule:'Rule 27',mine:1,mast:1,sides:1,stern:1,en:'Mine clearance vessel',he:'שולת מוקשים',nen:'Three all-round greens. Keep 1,000 m clear.',nhe:'שלושה ירוקים סביביים. להתרחק 1,000 מ\'.'},
- SUB:{rule:'Rule 1(c)',en:'Submarine on the surface',he:'צוללת על פני המים',nen:'Her masthead light sits low and forward, below the sidelights on the fin.',nhe:'אור התורן שלה נמוך וקדמי, מתחת לאורות הצד שעל המגדל.'}
-};
-const VIEWSUF={ahead:[', seen from ahead',', מבט מלפנים'],astern:[', seen from astern',', מבט מאחור'],left:[', heading left (her port side)',', מפליג שמאלה'],right:[', heading right (her starboard side)',', מפליג ימינה'],any:['','']};
-const CN={R:['red','אדום'],W:['white','לבן'],G:['green','ירוק'],Y:['yellow','צהוב']};
-const NUM={2:['two','שני'],3:['three','שלושה']};
-function layout(v,view){
-  const P=[];const has=v.ar||v.mine;
-  if(view==='ahead'||view==='any'){
-    const ax=v.mast||v.stack?96:100;
-    if(v.mine){P.push(['G',100,22],['G',64,40],['G',136,40])}
-    (v.ar||[]).forEach((c,i)=>P.push([c,ax,(v.ar.length>2?34:40)+i*16]));
-    const mx=has&&!v.mine?116:100;
-    if(v.mast===1)P.push(['W',mx,v.mine?56:has?22:40]);
-    if(v.mast===2){if(has&&!v.mine)P.push(['W',114,60],['W',118,24]);else P.push(['W',98,58],['W',102,32])}
-    if(v.stack)for(let i=0;i<v.stack;i++)P.push(['W',v.ar?116:98,62-i*14]);
-    if(v.aftmast)P.push(['W',104,24]);
-    if(v.flash)P.push([v.flash,100,18,1]);
-    if(view==='ahead'&&v.sides)P.push(['G',84,92],['R',116,92]);
-    if(v.single)P.push(['W',v.ar?134:100,72]);
-  } else if(view==='astern'){
-    if(v.mine){P.push(['G',100,22],['G',64,40],['G',136,40])}
-    (v.ar||[]).forEach((c,i)=>P.push([c,100,30+i*16]));
-    if(v.flash)P.push([v.flash,100,18,1]);
-    if(v.tow)P.push(['Y',100,76]);
-    if(v.stern)P.push(['W',100,90]);
-  } else { // left = bow left (port side), right = bow right (starboard side)
-    const L=view!=='right',bow=L?50:150,stn=L?150:50,d=L?-1:1,fwd=bow+d*-25,aft=stn+d*30;
-    if(v.mine)P.push(['G',100,24],['G',100,40]);
-    (v.ar||[]).forEach((c,i)=>P.push([c,100,(v.anchor?36:34)+i*16]));
-    if(v.mast===1)P.push(['W',fwd,v.mine?40:48]);
-    if(v.mast===2)P.push(['W',fwd,58],['W',aft,30]);
-    if(v.stack)for(let i=0;i<v.stack;i++)P.push(['W',fwd,62-i*14]);
-    if(v.aftmast)P.push(['W',aft,28]);
-    if(v.flash)P.push([v.flash,100,18,1]);
-    if(v.sides)P.push([L?'R':'G',bow-d*6,90]);
-    if(v.single)P.push(['W',bow,70]);
-    if(v.anchor===2)P.push(['W',L?28:172,56],['W',L?172:28,78]);
-  }
-  return P;
-}
-function describe(v,view){
-  const en=[],he=[];
-  if(v.mine){en.push('three all-round greens');he.push('שלושה ירוקים סביביים')}
-  if(v.ar){en.push('all-round '+v.ar.map(c=>CN[c][0]).join(' over '));he.push(v.ar.map(c=>CN[c][1]).join(' מעל ')+' (סביביים)')}
-  if(v.flash){en.push('flashing yellow');he.push('צהוב מהבהב')}
-  if(view!=='astern'){
-    if(v.mast===1){en.push('masthead light');he.push('אור תורן')}
-    if(v.mast===2){en.push('two masthead lights, aft one higher');he.push('שני אורות תורן, האחורי גבוה יותר')}
-    if(v.stack){en.push(NUM[v.stack][0]+' masthead lights in a vertical line');he.push(NUM[v.stack][1]+' אורות תורן בקו אנכי')}
-    if(v.aftmast){en.push('aft masthead light');he.push('אור תורן אחורי')}
-  }
-  if(v.sides){if(view==='ahead'){en.push('both sidelights');he.push('שני אורות צד')}
-    if(view==='left'){en.push('red sidelight');he.push('אור צד אדום')}
-    if(view==='right'){en.push('green sidelight');he.push('אור צד ירוק')}}
-  if(view==='astern'){if(v.tow){en.push('yellow towing light');he.push('אור גרירה צהוב')}if(v.stern){en.push('white sternlight');he.push('אור ירכתיים לבן')}}
-  if(v.single){en.push(v.ar?'anchor light':'one white light');he.push(v.ar?'אור עוגן':'אור לבן אחד')}
-  if(v.anchor===2){en.push('two anchor lights');he.push('שני אורות עוגן')}
-  const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
-  return [(en.length?cap(en.join(', '))+'. ':'')+v.nen,(he.length?he.join(', ')+'. ':'')+v.nhe];
-}
-// tow behind a tug seen from the side: squeeze the tug toward the bow and add the tow's sidelight
-function withTow(P,view){
-  const L=view==='left';
-  const out=P.map(([c,x,y,b])=>[c,L?8+x*.5:92+x*.5,y,b]);
-  out.push([L?'R':'G',L?178:22,92]);
-  return out;
-}
-// [syllabus number, type, view, options]
-const SYL=[
- [1,'SV','ahead'],[2,'CBDL','ahead'],
- [3,'DR','astern',{extra:[['G',58,60],['G',58,76],['R',142,60],['R',142,76]],en:'Dredger, obstruction on her starboard side, seen from astern',he:'מחפר מוגבל בכושרו לתמרן, מכשול בדופן ימין, מבט מאחור',den:'Red-white-red and sternlight. From astern her starboard side is on your right, so the two reds are on the right; pass on the left, by the greens.',dhe:'אדום-לבן-אדום ואור ירכתיים. מאחור, דופן ימין שלו מימינך, לכן האדומים מימין; עוברים משמאל, ליד הירוקים.'}],
- [4,'F','astern',{extra:[['W',140,58]],en:'Vessel fishing, gear out on her starboard side, seen from astern',he:'כלי שיט בדיג, פורש רשת מצד ימין, מבט מאחור',den:'Red over white, sternlight, plus an all-round white towards gear extending more than 150 m.',dhe:'אדום מעל לבן, אור ירכתיים, ולבן סביבי לכיוון ציוד ששלוח מעל 150 מ\'.'}],
- [5,'SUB','ahead',{lights:[['G',86,48],['R',114,48],['W',100,76]]}],
- [6,'T','left',{tow:1,en:'Tug and tow, tow under 200 m, heading left',he:'כלי שיט גורר ונגרר, אורך הגרירה פחות מ-200 מ\', מפליגים שמאלה'}],
- [7,'G','any'],[8,'F','ahead'],[9,'M','ahead'],[10,'PIL','ahead'],
- [11,'RAMT','left',{tow:1,en:'Tug and tow restricted in ability to manoeuvre, tow under 200 m, heading left',he:'גורר ונגרר מוגבלים בכושרם לתמרן, אורך הגרירה פחות מ-200 מ\', מפליגים שמאלה'}],
- [12,'PL','left'],[13,'SV','left'],[14,'SRG','right'],[15,'P','ahead'],[16,'H','ahead'],
- [17,'T','astern',{extra:[['W',140,96]],en:'Tug and tow, seen from astern',he:'כלי שיט גורר ונגרר, מבט מאחור',den:'The tug\'s yellow towing light over her sternlight, and the tow\'s own white sternlight closer to you.',dhe:'אור הגרירה הצהוב של הגוררת מעל אור הירכתיים שלה, ואור הירכתיים הלבן של הנגרר קרוב יותר אליך.'}],
- [18,'H','astern'],[19,'TR','right'],[20,'N','astern'],[21,'PIL','astern'],[22,'RAML','left'],
- [23,'RAMT','astern',{extra:[['W',146,96]],en:'Towing vessel restricted in her ability to manoeuvre, with tow, seen from astern',he:'כלי שיט גורר המוגבל בכושרו לתמרן ונגרר, מבט מאחור'}],
- [24,'SRG','left'],[25,'CBDL','right'],
- [26,'DR','any',{lights:[['R',100,36],['W',100,52],['R',100,68],['R',58,60],['R',58,76],['G',142,60],['G',142,76]],en:'Dredger with lights marking the obstruction',he:'מחפר, עם אורות הכוונה לצד המכשול',den:'Red-white-red, two reds on the obstructed side, two greens on the side to pass.',dhe:'אדום-לבן-אדום, שני אדומים בצד החסום, שני ירוקים בצד שבו עוברים.'}],
- [27,'A','any'],[28,'TB','ahead'],
- [29,'TR','astern',{extra:[['W',60,58]],en:'Trawler with nets out on her port side, seen from astern',he:'מכמורתן, פורש רשתות מצד שמאל, מבט מאחור',den:'Green over white, sternlight, plus a white towards the gear on her port side (your left from astern).',dhe:'ירוק מעל לבן, אור ירכתיים, ולבן לכיוון הציוד בצד שמאל שלו (משמאלך כשמסתכלים מאחור).'}],
- [30,'P','left'],[31,'M','right'],[32,'M','astern'],[33,'N','left'],[34,'PIL','right'],[35,'RAM','ahead'],[36,'PL','ahead'],
- [37,'SRG','astern'],[38,'CBD','astern'],[39,'GL','left',{en:'Vessel over 50 m aground',he:'כלי שיט מעל 50 מ\' על שרטון'}],[40,'H','right'],
- [41,'SUB','right',{lights:[['W',44,64],['G',104,52],['W',150,76]]}],
- [42,'RAM','astern'],[43,'P','right'],[44,'TR','left'],[45,'N','right'],[46,'PIL','left'],[47,'RAMTL','ahead'],[48,'SV','right'],[49,'CBDL','left'],
- [50,'DR','ahead',{extra:[['G',60,64],['G',60,80],['R',150,64],['R',150,80]],en:'Dredger making way, obstruction on her port side, seen from ahead',he:'מחפר עושה דרך במים, מכשול בצד שמאל, מבט מלפנים',den:'From ahead her port side is on your right, so the two reds are on the right. Pass on your left, by the greens.',dhe:'מלפנים, צד שמאל שלו מימינך, לכן האדומים מימין. עוברים משמאלך, ליד הירוקים.'}],
- [51,'F','right'],
- [52,'SUB','left',{lights:[['W',156,64],['R',96,52],['W',50,76]]}],
- [53,'T','right',{tow:1,en:'Tug and tow, tow under 200 m, heading right',he:'כלי שיט גורר ונגרר, אורך הגרירה פחות מ-200 מ\', מפליגים ימינה'}],
- [54,'DR','right',{extra:[['R',120,64],['R',120,80]],en:'Dredger seen from her starboard side, obstruction on this side',he:'מחפר מוגבל בכושרו לתמרן, נראה מדופן ימין, עם סימון מכשול בדופן זו',den:'You see the two reds of the obstructed side. Do not pass on this side.',dhe:'רואים את שני האדומים של הצד החסום. אין לעבור בצד זה.'}],
- [55,'F','left'],[56,'M','left'],
- [57,'N','left',{extra:[['W',66,30],['R',66,46]],en:'Vessel not under command with a pilot on board, heading left',he:'כלי שיט ללא שליטה שיש עליו נתב, מפליג שמאלה',den:'Two reds for not under command, white over red for the pilot, red sidelight.',dhe:'שני אדומים לכלי שיט ללא שליטה, לבן מעל אדום לנתב, אור צד אדום.'}],
- [58,'SRG','ahead'],
- [59,'RAMT','right',{tow:1,en:'Tug and tow restricted in ability to manoeuvre, tow under 200 m, heading right',he:'גורר ונגרר מוגבלים בכושרם לתמרן, אורך הגרירה פחות מ-200 מ\', מפליגים ימינה'}],
- [60,'TL','left',{tow:1,en:'Tug and tow, tow over 200 m, heading left',he:'כלי שיט גורר ונגרר, אורך הגרירה מעל 200 מ\', מפליגים שמאלה'}],
- [61,'AL','right',{en:'Vessel over 50 m at anchor, seen from her starboard side',he:'כלי שיט מעל 50 מ\' מעוגן (דופן ימין)'}],
- [62,'H','left'],
- [63,'PU','ahead',{lights:[['W',100,48],['W',100,62],['G',36,92],['R',164,92]]}],
- [64,'TR','ahead'],
- [65,'DR','left',{extra:[['G',80,64],['G',80,80]],en:'Dredger making way seen from her port side, safe to pass on this side',he:'מחפר עושה דרך במים, במבט לדופן שמאל, עם הכוונה למעבר בטוח בקרבת דופן שמאל',den:'You see the two greens: this is the side to pass.',dhe:'רואים את שני הירוקים: זה הצד שבו עוברים.'}],
- [66,'N','ahead'],[67,'RAML','right'],
- [68,'M','ahead',{lights:[['G',100,22],['G',136,40],['W',100,56],['G',84,92],['R',116,92]],en:'Mine clearance vessel under 50 m, seen from ahead',he:'שולת מוקשים עד 50 מ\', מבט מהחרטום',den:'From this angle one yardarm green is hidden.',dhe:'מזווית זו אחד הירוקים בסרנין מוסתר.'}],
- [69,'PL','right'],[70,'RAMS','any'],
- [71,'','any',{lights:[['R',60,74],['G',140,74]],rule:'IALA A',en:'Harbour entrance lights',he:'אורות סימון כניסה למעגנה / נמל',den:'Entering harbour in Region A: red on your port side, green on your starboard side.',dhe:'בכניסה לנמל באזור A: אדום משמאלך, ירוק מימינך.'}],
- [72,'TL','right',{tow:1,en:'Tug and tow, tow over 200 m, heading right',he:'כלי שיט גורר ונגרר, אורך הגרירה מעל 200 מ\', מפליגים ימינה'}],
- [73,'','any',{lights:[['W',100,50],['G',100,66]],rule:'Local harbour signal',en:'Rough sea warning at the harbour exit (Beaufort 5 and above)',he:'סימון אזהרת מצב ים קשה ביציאה מנמל (בופור 5 ומעלה)',den:'White over green, shown at the harbour exit when the sea is Beaufort 5 or more.',dhe:'לבן מעל ירוק, מוצג ביציאה מהנמל כשמצב הים בופור 5 ומעלה.'}]
-];
-const VQ={ahead:'ahead',astern:'astern',left:'left',right:'right',any:'any'};
-const LIGHTS=SYL.map(([n,k,view,o={}])=>{
-  const v=VT[k]||{};let lights=o.lights||layout(v,view);
-  if(o.tow)lights=withTow(lights,view);
-  if(o.extra)lights=lights.concat(o.extra);
-  const [den,dhe]=o.den?[o.den,o.dhe||o.den]:(k?describe(v,view):['','']);
-  return {id:'L'+n,num:n,cat:'L',view:VQ[view],lights,rule:o.rule||v.rule,
-    en:o.en||(v.en+VIEWSUF[view][0]),he:o.he||(v.he+VIEWSUF[view][1]),den,dhe};
-});
-
-// ---- Day shapes: syllabus 75–89
-const D=(num,shapes,rule,en,he,den,dhe,yard)=>({id:'D'+num,num,cat:'D',shapes,rule,en,he,den,dhe,yard});
-const SHAPES=[
- D(75,[['cyl',100,52]],'Rule 28','Vessel constrained by her draught','כלי שיט המוגבל בשל שוקע','A cylinder.','גליל.'),
- D(76,[['ball',100,36],['ball',64,58],['ball',136,58]],'Rule 27','Mine clearance vessel at work','שולת מוקשים בפעולה','Three balls: one at the masthead, one at each yardarm. Keep 1,000 m clear on both sides.','שלושה כדורים: בראש התורן ובשני קצות הסרנין. להתרחק 1,000 מ\' משני הצדדים.',true),
- D(77,[['ball',100,44]],'Rule 30','Vessel at anchor, or a weather warning when shown on a harbour structure','כלי שיט עוגן / אזהרה מטאורולוגית ביציאה מנמל, כאשר נמצא על מבנה נמל','One ball. On a vessel: at anchor. On the harbour structure: weather warning at the harbour exit.','כדור אחד. על כלי שיט: מעוגן. על מבנה הנמל: אזהרה מטאורולוגית ביציאה מהנמל.'),
- D(78,[['dia',56,48],['ball',100,36],['dia',100,64],['ball',100,92]],'Rules 24, 27','Towing vessel restricted in her ability to manoeuvre','כלי שיט גורר המוגבל בכושרו לתמרן','Ball-diamond-ball plus the towing diamond.','כדור-מעוין-כדור ומעוין הגרירה.',true),
- D(79,[['ball',100,36],['dia',100,64],['ball',100,92]],'Rule 27','Vessel restricted in her ability to manoeuvre','כלי שיט המוגבל בכושרו לתמרן','Ball, diamond, ball.','כדור, מעוין, כדור.'),
- D(80,[['ball',100,40],['ball',100,68]],'Rule 27','Vessel not under command','כלי שיט ללא שליטה','Two balls in a vertical line.','שני כדורים בקו אנכי.'),
- D(81,[['ball',100,36],['ball',100,64],['ball',100,92]],'Rule 30','Vessel aground','כלי שיט על שרטון','Three balls in a vertical line.','שלושה כדורים בקו אנכי.'),
- D(82,[['coneDown',100,46]],'Rule 25','Sailing vessel also under engine','מפרשית המפליגה בעזרת מנוע','A cone, point down.','חרוט, חוד למטה.'),
- D(83,[['sqflag',100,38],['ball',100,72]],'Annex IV','In distress and needing help','נמצא במצוקה מבקש עזרה','A square flag with a ball above or below it.','דגל מרובע עם כדור מעליו או מתחתיו.'),
- D(84,[['coneDown',100,42],['coneUp',100,64]],'Rule 26','Vessel trawling','כלי שיט מכמורתן בעבודתו','Two cones with points together.','שני חרוטים, חוד מול חוד.'),
- D(85,[['coneUp',100,50]],'Rule 26','Fishing with nets, gear extending more than 150 m horizontally from the vessel','ספינת דייג רשתות, שאורכו של הציוד אופקית מהספינה מעל 150 מ\'','A cone, point up, shown towards the gear.','חרוט, חוד למעלה, לכיוון הציוד.'),
- D(86,[['dia',100,50]],'Rule 24','Towing vessel, tow over 200 m','כלי שיט גורר, כשאורך המשך לנגרר מעל 200 מטר','A diamond, on both the tug and the tow.','מעוין, גם על הגוררת וגם על הנגרר.'),
- D(87,[['ball',100,32],['dia',100,58],['ball',100,84],['ball',56,58],['ball',56,84],['dia',144,58],['dia',144,84]],'Rule 27','Dredger: obstruction on the side with the balls, safe to pass on the side with the diamonds','כלי שיט / מחפר מוגבל בכושרו לתמרן עם מכשול בדופן המסומנת בכדורים, ואפשרות למעבר בטוח בצד המסומן במעוינים','Balls mark the obstructed side, diamonds the side to pass.','כדורים בצד החסום, מעוינים בצד שבו עוברים.',true),
- D(88,[['ball',100,32],['dia',100,58],['ball',100,84],['dia',144,58],['dia',144,84]],'Rule 27','Dredger: safe to pass on the side marked by diamonds','כלי שיט / מחפר מוגבל בכושרו לתמרן עם אפשרות למעבר בטוח בצד המסומן ע"י מעוינים','Ball-diamond-ball plus two diamonds on the side to pass.','כדור-מעוין-כדור ושני מעוינים בצד שבו עוברים.',true),
- D(89,[['ball',100,32],['dia',100,58],['ball',100,84],['ball',56,58],['ball',56,84]],'Rule 27','Dredger: obstruction on the side marked by balls','כלי שיט / מחפר מוגבל בכושרו לתמרן עם מכשול בדופן המסומנת ע"י כדורים','Ball-diamond-ball plus two balls on the obstructed side.','כדור-מעוין-כדור ושני כדורים בצד החסום.',true)
-];
-// ---- Sound signals: syllabus 111–122 (123–125 are decoys)
-const S=(num,ctx,seq,rule,en,he,den,dhe)=>({id:'S'+num,num,cat:'S',ctx,seq,rule,en,he,den,dhe});
-const SOUNDS=[
- S(111,'sight','s','Rule 34','I am altering my course to starboard','אני משנה אורחי לימין','One short blast.','צפירה קצרה אחת.'),
- S(112,'fog','l','Rule 35','Power-driven vessel making way in restricted visibility','כלי שיט ממוכן עושה דרכו במים בראות מוגבלת','One long blast every 2 minutes or less.','צפירה ארוכה אחת, כל 2 דקות לכל היותר.'),
- S(113,'sight','sss','Rule 34','Power-driven vessel operating astern propulsion','כלי שיט ממוכן, מפעיל מכונות לאחור','Three short blasts.','שלוש צפירות קצרות.'),
- S(114,'sight','ss','Rule 34','I am altering my course to port','אני משנה אורחי לשמאל','Two short blasts.','שתי צפירות קצרות.'),
- S(115,'sight','sssss','Rule 34','I do not understand your intentions','לא מבין כוונותיך בתמרונך','At least five short, rapid blasts.','לפחות חמש צפירות קצרות ומהירות.'),
- S(116,'sight','llss','Rule 34','I intend to overtake you on your port side','אני מתכוון להשיג אותך ולעבור בצדך השמאלי','Two long, two short.','שתיים ארוכות, שתיים קצרות.'),
- S(117,'sight','lsls','Rule 34','I agree to be overtaken','מסכים לבקשתך להשיג אותי','Long, short, long, short.','ארוכה, קצרה, ארוכה, קצרה.'),
- S(118,'fog','ll','Rule 35','Power-driven vessel underway in restricted visibility, stopped and not making way','כלי שיט ממוכן בדרך בראות מוגבלת שעצר ואינו עושה דרכו במים','Two long blasts every 2 minutes or less.','שתי צפירות ארוכות, כל 2 דקות לכל היותר.'),
- S(119,'any','C','Annex IV','I am in distress and need immediate help','אני במצוקה מבקש עזרה מיידית','Continuous sounding of the fog signal.','צפירה רציפה.'),
- S(120,'fog','lsss','Rule 35','Vessel being towed (also: loading, carrying or discharging dangerous goods)','כלי שיט נגרר / אני טוען, נושא או פורק מטענים מסוכנים','One long, three short.','ארוכה ושלוש קצרות.'),
- S(121,'sight','lls','Rule 34','I intend to overtake you on your starboard side','מתכוון להשיג אותך ולעבור בצדך הימני','Two long, one short.','שתיים ארוכות, אחת קצרה.'),
- S(122,'fog','lss','Rule 35','Restricted in ability to manoeuvre, constrained by draught, not under command, sailing or towing, making way in restricted visibility','כלי שיט מוגבל בכושרו לתמרן / מוגבל בשל שוקע / אין עליו שליטה / מפרשית / גוררת, בראות מוגבלת עושה דרכו במים','One long, two short, every 2 minutes or less.','ארוכה ושתיים קצרות, כל 2 דקות לכל היותר.')
-];
-const DECOYS=[['lsl',123],['lll',124],['slll',125]].map(([seq,num])=>({id:'X'+num,num,cat:'S',rev:1,decoy:1,ctx:'any',seq,en:'',he:'',den:'',dhe:''}));
-// ---- Flags: only A B C H N O Q
-const PHON={A:'Alfa',B:'Bravo',C:'Charlie',H:'Hotel',N:'November',O:'Oscar',Q:'Quebec'};
-const FL=(k,num,en,he)=>({id:'F'+k,num,cat:'F',flags:[k],rule:'International Code of Signals',en,he,den:k+' · '+PHON[k],dhe:k+' · '+PHON[k]});
-const FLAGS=[
- FL('N',92,'No (negative)','לא (שלילי)'),
- FL('C',93,'Yes (affirmative)','כן (חיובי)'),
- FL('B',95,'I am loading, discharging or carrying dangerous goods','אני טוען, פורק או נושא חומרים מסוכנים'),
- FL('A',98,'I have a diver down; keep well clear at slow speed','עוסק בצלילה, התרחק בזהירות'),
- FL('H',100,'I have a pilot on board','יש נתב באנייתי'),
- FL('O',104,'Man overboard','אדם בים'),
- FL('Q',106,'My vessel is healthy and I request free pratique','ספינתי בריאה, מבקש רשות פעולה חופשית בנמל')
-];
-const REV=[...SHAPES,...FLAGS,...SOUNDS].map(c=>({...c,id:'R'+c.id,rev:1}));
-const ALL=[...LIGHTS,...SHAPES,...SOUNDS,...FLAGS,...REV];
-
-
-// ---------- drawing ----------
-const LC={W:'#fff3d6',R:'#ff3d2e',G:'#27f08a',Y:'#ffcb2e'};
-function lightsSVG(c){
-  let g='';
-  for(const [k,x,y,b] of c.lights){
-    g+=`<g class="${b?'blink':''}"><circle cx="${x}" cy="${y}" r="10" fill="${LC[k]}" opacity=".28" filter="url(#glow)"/><circle cx="${x}" cy="${y}" r="3.4" fill="${LC[k]}"/></g>`;
-  }
-  return `<svg class="viz" viewBox="0 0 200 130" role="img" aria-label="Navigation lights at night">
-  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050b14"/><stop offset="1" stop-color="#0d1c2c"/></linearGradient>
-  <filter id="glow" x="-1" y="-1" width="3" height="3"><feGaussianBlur stdDeviation="3"/></filter></defs>
-  <rect width="200" height="130" fill="url(#sky)"/>
-  <rect y="108" width="200" height="22" fill="#040910"/><line x1="0" y1="108" x2="200" y2="108" stroke="#1b3247" stroke-width=".6"/>
-  <circle cx="22" cy="14" r=".6" fill="#8aa"/><circle cx="170" cy="20" r=".5" fill="#8aa"/><circle cx="140" cy="8" r=".6" fill="#8aa"/><circle cx="48" cy="30" r=".4" fill="#8aa"/>
-  ${g}</svg>`;
-}
-function shape(t,x,y){
-  const k='#151a1f';
-  if(t==='ball')return `<circle cx="${x}" cy="${y}" r="10" fill="${k}"/>`;
-  if(t==='dia')return `<polygon points="${x},${y-12} ${x+9},${y} ${x},${y+12} ${x-9},${y}" fill="${k}"/>`;
-  if(t==='cyl')return `<rect x="${x-8}" y="${y-13}" width="16" height="26" fill="${k}"/>`;
-  if(t==='coneUp')return `<polygon points="${x},${y-10} ${x+11},${y+10} ${x-11},${y+10}" fill="${k}"/>`;
-  if(t==='coneDown')return `<polygon points="${x-11},${y-10} ${x+11},${y-10} ${x},${y+10}" fill="${k}"/>`;
-  if(t==='flagA')return `<g transform="translate(${x} ${y-20}) scale(.5)">${flag('A')}</g>`;
-  if(t==='sqflag')return `<rect x="${x}" y="${y-12}" width="26" height="24" fill="${k}"/>`;
-  return '';
-}
-function shapesSVG(c){
-  let s='';const xs=c.shapes.map(a=>a[1]);
-  for(const [t,x,y] of c.shapes){ if(x!==100) s+=`<line x1="${x}" y1="20" x2="${x}" y2="${y}" stroke="#56636d" stroke-width=".7"/>`; s+=shape(t,x,y); }
-  const yard=c.yard?`<line x1="${Math.min(...xs,70)}" y1="20" x2="${Math.max(...xs,130)}" y2="20" stroke="#56636d" stroke-width="2"/>`:'';
-  return `<svg class="viz" viewBox="0 0 200 130" role="img" aria-label="Day shapes">
-  <defs><linearGradient id="day" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd6e6"/><stop offset="1" stop-color="#e6f0f5"/></linearGradient></defs>
-  <rect width="200" height="130" fill="url(#day)"/><rect y="112" width="200" height="18" fill="#7d9fb2"/>
-  <line x1="100" y1="6" x2="100" y2="112" stroke="#56636d" stroke-width="2"/>${yard}${s}</svg>`;
-}
-const FR='#d2232a',FB='#1c4f9c',FY='#f6c21c',FK='#141414',FW='#ffffff';
-function flag(k){
-  const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
-  const p=(pts,c)=>`<polygon points="${pts}" fill="${c}"/>`;
-  const swal='0,0 120,0 90,40 120,80 0,80';
-  let b='';
-  switch(k){
-   case'A':b=`<clipPath id="sw"><polygon points="${swal}"/></clipPath><g clip-path="url(#sw)">${r(0,0,60,80,FW)}${r(60,0,60,80,FB)}</g><polygon points="${swal}" fill="none" stroke="#9aa5ad" stroke-width="1"/>`;return wrap(b,true);
-   case'B':return wrap(p(swal,FR),true);
-   case'C':b=r(0,0,120,16,FB)+r(0,16,120,16,FW)+r(0,32,120,16,FR)+r(0,48,120,16,FW)+r(0,64,120,16,FB);break;
-   case'D':b=r(0,0,120,20,FY)+r(0,20,120,40,FB)+r(0,60,120,20,FY);break;
-   case'E':b=r(0,0,120,40,FB)+r(0,40,120,40,FR);break;
-   case'F':b=r(0,0,120,80,FW)+p('60,0 120,40 60,80 0,40',FR);break;
-   case'G':for(let i=0;i<6;i++)b+=r(i*20,0,20,80,i%2?FB:FY);break;
-   case'H':b=r(0,0,60,80,FW)+r(60,0,60,80,FR);break;
-   case'I':b=r(0,0,120,80,FY)+`<circle cx="60" cy="40" r="20" fill="${FK}"/>`;break;
-   case'J':b=r(0,0,120,27,FB)+r(0,27,120,26,FW)+r(0,53,120,27,FB);break;
-   case'K':b=r(0,0,60,80,FY)+r(60,0,60,80,FB);break;
-   case'L':b=r(0,0,60,40,FY)+r(60,0,60,40,FK)+r(0,40,60,40,FK)+r(60,40,60,40,FY);break;
-   case'M':b=r(0,0,120,80,FB)+`<path d="M0 0L120 80M120 0L0 80" stroke="${FW}" stroke-width="16"/>`;break;
-   case'N':for(let i=0;i<4;i++)for(let j=0;j<4;j++)b+=r(i*30,j*20,30,20,(i+j)%2?FW:FB);break;
-   case'O':b=p('0,0 120,0 120,80',FR)+p('0,0 0,80 120,80',FY);break;
-   case'P':b=r(0,0,120,80,FB)+r(40,27,40,26,FW);break;
-   case'Q':b=r(0,0,120,80,FY);break;
-   case'R':b=r(0,0,120,80,FR)+r(50,0,20,80,FY)+r(0,30,120,20,FY);break;
-   case'S':b=r(0,0,120,80,FW)+r(40,27,40,26,FB);break;
-   case'T':b=r(0,0,40,80,FR)+r(40,0,40,80,FW)+r(80,0,40,80,FB);break;
-   case'U':b=r(0,0,60,40,FR)+r(60,0,60,40,FW)+r(0,40,60,40,FW)+r(60,40,60,40,FR);break;
-   case'V':b=r(0,0,120,80,FW)+`<path d="M0 0L120 80M120 0L0 80" stroke="${FR}" stroke-width="16"/>`;break;
-   case'W':b=r(0,0,120,80,FB)+r(20,13,80,54,FW)+r(40,27,40,26,FR);break;
-   case'X':b=r(0,0,120,80,FW)+r(50,0,20,80,FB)+r(0,30,120,20,FB);break;
-   case'Y':b=r(0,0,120,80,FY);for(let i=-6;i<12;i+=2)b+=p(`${i*16},80 ${i*16+16},80 ${i*16+96},0 ${i*16+80},0`,FR);b=`<clipPath id="yc"><rect width="120" height="80"/></clipPath><g clip-path="url(#yc)">${b}</g>`;break;
-   case'Z':b=p('0,0 120,0 60,40',FY)+p('0,0 60,40 0,80',FK)+p('0,80 60,40 120,80',FR)+p('120,0 60,40 120,80',FB);break;
-  }
-  return wrap(b+`<rect width="120" height="80" fill="none" stroke="#9aa5ad" stroke-width="1"/>`);
-  function wrap(inner){return inner}
-}
-function flagsSVG(c){
-  const n=c.flags.length,h=n===1?130:200;
-  let s=`<svg class="viz" viewBox="0 0 200 ${h}" role="img" aria-label="Code flag"><rect width="200" height="${h}" fill="#dfe8ee"/><line x1="34" y1="0" x2="34" y2="${h}" stroke="#7a8791" stroke-width="2"/>`;
-  c.flags.forEach((k,i)=>{const y=n===1?25:12+i*96; s+=`<line x1="34" y1="${y}" x2="44" y2="${y}" stroke="#7a8791" stroke-width="1.5"/><g transform="translate(44 ${y})">${flag(k)}</g>`;});
-  return s+'</svg>';
-}
-function soundSVG(seq){
-  // draws the signal the way the syllabus shows it: dots for short blasts, dashes for long ones
-  const toks=[...(seq||'')],W={s:10,l:30,C:140},GAP=12;
-  const total=toks.reduce((n,t)=>n+(W[t]||0),0)+GAP*Math.max(0,toks.length-1);
-  let x=100-total/2,g='';
-  for(const t of toks){
-    if(t==='s')g+=`<circle cx="${x+5}" cy="55" r="5" fill="#15191d"/>`;
-    else if(t==='l'||t==='C')g+=`<rect x="${x}" y="51" width="${W[t]}" height="8" rx="4" fill="#15191d"/>`;
-    x+=(W[t]||0)+GAP;
-  }
-  return `<svg class="viz" viewBox="0 0 200 110" role="img" aria-label="Sound signal"><rect width="200" height="110" fill="#c9ced3"/>${g}</svg>`;
-}
-function patternHTML(seq,lang){
-  const lab={en:{B:'Bell 5 s',G:'Gong 5 s',k:'Bell stroke',C:'Continuous'},he:{B:'פעמון 5 ש\'',G:'גונג 5 ש\'',k:'מכת פעמון',C:'רציף'}}[lang];
-  if(seq==='SOS')return '<span class="pattern"><span class="tag">··· — — — ···</span></span>';
-  return '<span class="pattern">'+[...seq].map(t=>t==='f'?'<span class="blip f" title="flash"></span>':t==='s'?'<span class="blip s" title="short"></span>':t==='l'?'<span class="blip l" title="long"></span>':t==='C'?'<span class="blip c" title="continuous"></span>':`<span class="tag">${lab[t]}</span>`).join('')+'</span>';
-}
-
-// sounds are shown, not played
-let playing=false;function stopSound(){}
-
-// ---------- state ----------
-const KEY='lights-signals-cards-v1';
-let st={lang:'en',set:'all',known:[],mode:'cards'};
-try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
-st.lang='en'; // Hebrew hidden for now
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({lang:st.lang,set:st.set,known:st.known,mode:st.mode}))}catch(e){}};
-let pile=[],revealed=false,quiz={opts:[],picked:null,right:0,done:0};
-const SETS=[['all',null],['lights','L'],['shapes','D'],['sounds','S'],['flags','F']];
-const inSet=c=>{const m=SETS.find(s=>s[0]===st.set)[1];return !m||c.cat===m};
-const quizable=c=>!(c.cat==='S'&&!c.seq);
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function build(){
-  stopSound();revealed=false;
-  if(st.mode==='learn'){render();return}
-  if(st.mode==='quiz'){pile=shuffle(ALL.filter(c=>inSet(c)&&quizable(c)));quiz={opts:[],picked:null,right:0,done:0};makeOpts()}
-  else pile=shuffle(ALL.filter(c=>inSet(c)&&!st.known.includes(c.id)));
-  render();
-}
-// what makes two answers "the same" for distractor picking
-const vkey=c=>c.rev?(c.cat==='F'?c.flags.join(''):c.cat==='D'?JSON.stringify(c.shapes):c.seq):c.en;
-function makeOpts(){
-  const c=pile[0];quiz.picked=null;if(!c){quiz.opts=[];return}
-  const pool=shuffle([...ALL,...DECOYS].filter(x=>x.cat===c.cat&&!!x.rev===!!c.rev&&quizable(x)&&vkey(x)!==vkey(c)));
-  const seen=new Set([vkey(c)]),opts=[c];
-  for(const x of pool){if(opts.length>=4)break;const k=vkey(x);if(!seen.has(k)){seen.add(k);opts.push(x)}}
-  quiz.opts=shuffle(opts);
-}
-
-// ---------- render ----------
-function renderChrome(){
-  const t=T[st.lang];
-  document.documentElement.lang=st.lang;document.documentElement.dir=st.lang==='he'?'rtl':'ltr';
-  document.getElementById('t-title').textContent=t.title;document.getElementById('t-sub').textContent=t.sub;
-  document.getElementById('lang-en').setAttribute('aria-pressed',st.lang==='en');document.getElementById('lang-he').setAttribute('aria-pressed',st.lang==='he');
-  document.getElementById('mode-learn').textContent=t.modeLearn;document.getElementById('mode-learn').setAttribute('aria-pressed',st.mode==='learn');document.getElementById('mode-cards').textContent=t.modeCards;document.getElementById('mode-quiz').textContent=t.modeQuiz;
-  document.getElementById('mode-cards').setAttribute('aria-pressed',st.mode==='cards');document.getElementById('mode-quiz').setAttribute('aria-pressed',st.mode==='quiz');
-  document.getElementById('chips').innerHTML=SETS.map(([k,m])=>`<button class="chip" type="button" data-set="${k}" aria-pressed="${st.set===k}">${t[k]}<span class="n">${ALL.filter(c=>!m||c.cat===m).length}</span></button>`).join('');
-  document.getElementById('shuffle').textContent=t.shuffle;document.getElementById('reset').textContent=t.reset;
-  document.getElementById('shuffle').hidden=st.mode==='quiz';
-  document.getElementById('keys').innerHTML=st.mode==='quiz'?t.qkeys:t.keys;
-}
-function question(c,t){
-  if(c.rev)return `<span class="qlabel">${t.revQ[c.cat]}</span>${st.lang==='he'?c.he:c.en}`;
-  if(c.cat==='L')return t.v[c.view];if(c.cat==='D')return t.shapeQ;if(c.cat==='S')return c.ctx==='light'?t.lightQ:t.sq[c.ctx];return t.flagQ;
-}
-function vizOf(c){return c.cat==='L'?lightsSVG(c):c.cat==='D'?shapesSVG(c):c.cat==='F'?flagsSVG(c):soundSVG(c.seq)}
-function hidden(){return `<svg class="viz" viewBox="0 0 200 90" aria-hidden="true"><rect width="200" height="90" fill="#1a2a37"/><text x="100" y="60" text-anchor="middle" font-family="Rubik,sans-serif" font-size="44" font-weight="700" fill="#f3c64a" opacity=".85">?</text></svg>`}
-function optVisual(x,lang){
-  if(!x.rev)return `<span>${lang==='he'?x.he:x.en}</span>`;
-  if(x.cat==='S')return patternHTML(x.seq,lang);
-  return x.cat==='F'?flagsSVG(x):shapesSVG(x);
-}
-function render(){
-  renderChrome();
-  const learning=st.mode==='learn';
-  document.querySelector('.wrap').classList.toggle('wide',learning);
-  ['card','keys'].forEach(id=>document.getElementById(id).hidden=learning);
-  document.querySelector('.stats').hidden=learning;
-  document.getElementById('learn').hidden=!learning;
-  if(learning){renderLearn();return}
-  const t=T[st.lang],lang=st.lang,el=document.getElementById('card'),quizMode=st.mode==='quiz';
-  const total=ALL.filter(c=>inSet(c)).length,known=ALL.filter(c=>inSet(c)&&st.known.includes(c.id)).length;
-  document.getElementById('count').textContent=quizMode?`${pile.length} ${t.left} · ${quiz.right}/${quiz.done} ${t.correct}`:`${pile.length} ${t.left} · ${known}/${total} ${t.known}`;
-  if(!pile.length){
-    const msg=quizMode?`${t.score} ${quiz.right}/${quiz.done} (${quiz.done?Math.round(100*quiz.right/quiz.done):0}%)`:t.done;
-    el.innerHTML=`<div class="done"><p style="font-family:var(--display);font-weight:600;font-size:1.15rem;margin:0">${msg}</p><button class="btn reveal" id="again-set" type="button" style="width:auto">${quizMode?t.newQuiz:t.studyAgain}</button></div>`;
-    document.getElementById('again-set').onclick=quizMode?build:resetSet;return}
-  const c=pile[0];
-  const showViz=!c.rev||revealed||(quizMode&&quiz.picked!==null);
-  const viz=c.rev&&!showViz?hidden():vizOf(c);
-  const ansBlock=()=>c.rev
-    ?`<div class="answer"><div class="a">${lang==='he'?c.dhe:c.den}</div><div class="rule">${c.rule}</div></div>`
-    :`<div class="answer"><div class="a">${lang==='he'?c.he:c.en}</div><div class="d">${lang==='he'?c.dhe:c.den}</div><div class="rule">${c.rule}</div></div>`;
-  let body;
-  if(quizMode){
-    const picked=quiz.picked!==null;
-    const opts=quiz.opts.map((x,i)=>{let cls='opt'+(x.rev&&x.cat!=='S'?' pic':'');
-      if(picked){if(x===c)cls+=' right';else if(i===quiz.picked)cls+=' wrong'}
-      return `<button class="${cls}" type="button" data-i="${i}" ${picked?'disabled':''}><span class="ok">${i+1}</span>${optVisual(x,lang)}</button>`}).join('');
-    body=`<div class="opts${c.rev&&c.cat!=='S'?' grid':''}">${opts}</div>${picked?ansBlock()+`<button class="btn reveal" id="b-next" type="button">${t.next}</button>`:''}`;
-  } else body=revealed?ansBlock()+`<div class="grade"><button class="btn again" id="b-again" type="button">${t.again}</button><button class="btn got" id="b-got" type="button">${t.got}</button></div>`
-    :`<button class="btn reveal" id="b-show" type="button">${t.show}</button>`;
-  el.innerHTML=`<div class="viz-wrap">${viz}<span class="cat">${t.catNames[c.cat]}${c.num?' · '+c.num:''}${c.rev?' · '+t.rev:''}</span></div><div class="q">${question(c,t)}</div><div class="body">${body}</div>`;
-  if(quizMode){el.querySelectorAll('.opt').forEach(b=>b.onclick=()=>pick(+b.dataset.i));const n=document.getElementById('b-next');if(n){n.onclick=nextQ;n.focus()}}
-  else if(revealed){document.getElementById('b-again').onclick=again;document.getElementById('b-got').onclick=got}
-  else document.getElementById('b-show').onclick=show;
-}
-// Learn: every item in the chosen set, picture next to its meaning, in syllabus order
-function renderLearn(){
-  const t=T[st.lang],lang=st.lang;
-  const html=['L','D','S','F'].map(cat=>{
-    const items=ALL.filter(c=>c.cat===cat&&!c.rev&&inSet(c)).sort((a,b)=>(a.num||0)-(b.num||0));
-    if(!items.length)return '';
-    const rows=items.map(c=>`<article class="li"><button class="zoom" type="button" data-id="${c.id}" aria-label="Enlarge picture: ${c.en}">${vizOf(c)}</button><div class="ltx"><span class="lnum">${c.num?'#'+c.num+' · ':''}${c.rule}</span><b>${lang==='he'?c.he:c.en}</b><span class="ld">${lang==='he'?c.dhe:c.den}</span></div></article>`).join('');
-    return `<h2>${t.learnHead[cat]} <span class="n" style="font:500 .8rem var(--mono);color:var(--muted)">${items.length}</span></h2><div class="lgrid">${rows}</div>`;
-  }).join('');
-  document.getElementById('learn').innerHTML=html;
-}
-// Zoom view for the Learn pictures: tap a picture to see it full size, tap again or X to close
-let lbList=[],lbIdx=0,lbOpen=false;
-function lbShow(){
-  const c=lbList[lbIdx],lang=st.lang;
-  document.getElementById('lb-body').innerHTML=`${vizOf(c)}<span class="lnum">${c.num?'#'+c.num+' · ':''}${c.rule}</span><b>${lang==='he'?c.he:c.en}</b><span class="ld">${lang==='he'?c.dhe:c.den}</span>`;
-  document.getElementById('lb-pos').textContent=`${lbIdx+1} / ${lbList.length}`;
-}
-function lbOpenAt(id){
-  lbList=[...document.querySelectorAll('#learn .zoom')].map(b=>ALL.find(c=>c.id===b.dataset.id));
-  lbIdx=Math.max(0,lbList.findIndex(c=>c.id===id));lbShow();
-  document.getElementById('lb').hidden=false;document.body.style.overflow='hidden';
-  if(!lbOpen){lbOpen=true;try{history.pushState({lb:1},'')}catch(e){}} // so the phone's Back button closes it
-  document.getElementById('lb-x').focus();
-}
-function lbClose(fromBack){
-  if(!lbOpen)return;lbOpen=false;
-  document.getElementById('lb').hidden=true;document.body.style.overflow='';
-  if(!fromBack){try{history.back()}catch(e){}}
-}
-function lbStep(d){lbIdx=(lbIdx+d+lbList.length)%lbList.length;lbShow()}
-document.getElementById('learn').addEventListener('click',e=>{const b=e.target.closest('.zoom');if(b)lbOpenAt(b.dataset.id)});
-document.getElementById('lb-x').onclick=()=>lbClose();
-document.getElementById('lb-body').onclick=()=>lbClose();
-document.getElementById('lb-prev').onclick=()=>lbStep(-1);
-document.getElementById('lb-next').onclick=()=>lbStep(1);
-document.getElementById('lb').addEventListener('click',e=>{if(e.target.id==='lb')lbClose()});
-addEventListener('popstate',()=>lbClose(true));
-document.addEventListener('keydown',e=>{if(!lbOpen)return;
-  if(e.key==='Escape')lbClose();else if(e.key==='ArrowRight')lbStep(1);else if(e.key==='ArrowLeft')lbStep(-1)});
-let lbX=null;
-document.getElementById('lb').addEventListener('touchstart',e=>{lbX=e.touches[0].clientX},{passive:true});
-document.getElementById('lb').addEventListener('touchend',e=>{if(lbX===null)return;const dx=e.changedTouches[0].clientX-lbX;lbX=null;if(Math.abs(dx)>50){lbStep(dx<0?1:-1)}},{passive:true});
-
-function pick(i){if(quiz.picked!==null)return;quiz.picked=i;quiz.done++;if(quiz.opts[i]===pile[0])quiz.right++;stopSound();render()}
-function nextQ(){pile.shift();stopSound();makeOpts();render()}
-function show(){revealed=true;render();document.getElementById('b-got')?.focus()}
-function next(){revealed=false;stopSound();render()}
-function again(){const c=pile.shift();pile.splice(Math.min(3,pile.length),0,c);next()}
-function got(){const c=pile.shift();if(!st.known.includes(c.id))st.known.push(c.id);save();next()}
-function resetSet(){st.known=st.known.filter(id=>{const c=ALL.find(x=>x.id===id);return c&&!inSet(c)});save();build()}
-
-document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;st.set=b.dataset.set;save();build()});
-document.getElementById('lang-en').onclick=()=>{st.lang='en';save();render()};
-document.getElementById('lang-he').onclick=()=>{st.lang='he';save();render()};
-document.getElementById('mode-learn').onclick=()=>{st.mode='learn';save();render()};
-document.getElementById('mode-cards').onclick=()=>{st.mode='cards';save();build()};
-document.getElementById('mode-quiz').onclick=()=>{st.mode='quiz';save();build()};
-document.getElementById('shuffle').onclick=()=>{shuffle(pile);revealed=false;stopSound();render()};
-document.getElementById('reset').onclick=()=>st.mode==='quiz'?build():resetSet();
-document.addEventListener('keydown',e=>{
-  if(e.target.closest('input,textarea')||st.mode==='learn')return;
-  const c=pile[0];if(!c)return;
-  if(st.mode==='quiz'){
-    if(quiz.picked===null&&/^[1-4]$/.test(e.key)&&+e.key<=quiz.opts.length)pick(+e.key-1);
-    else if(quiz.picked!==null&&(e.key==='Enter'||e.key===' ')){e.preventDefault();nextQ()}
-    return}
-  if(e.key===' '&&!revealed){e.preventDefault();show()}
-  else if(revealed&&e.key==='1')again();
-  else if(revealed&&e.key==='2')got();
-});
-build();
-</script>
-
-<script>
-// Register the service worker so the app installs and works offline
-if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
-</script>
-</body></html>
+  <footer><span>Sailing Theory <span data-version></span></span><span>A teaching aid for the Yam Sailing seamanship class.</span></footer>
+</main>
+<script src="shared/js/app.js"></script>
+</body>
+</html>
