@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Right of Way · Sailing Theory</title>
+<meta name="description" content="Two vessels on a collision course: work out who gives way.">
+<meta name="theme-color" content="#16324F">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="../shared/css/base.css">
+<style>
+/* Layout: one column — header, practice chips, score, then the chart card with the two vessels, the answer buttons and the explanation */
+[hidden]{display:none!important}
+main{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 18px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 40px) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+h1{font-size:clamp(1.6rem,6vw,2.2rem);color:var(--heading)}
+.sub{color:var(--ink-muted);margin-top:4px;font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:0;background:var(--bg-sunk);color:var(--ink);font:500 .9rem var(--font-display);padding:7px 14px;border-radius:999px}
+.chip[aria-pressed="true"]{background:var(--coral);color:#fff}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:var(--surface-ivory);border:1.5px solid var(--border);border-radius:999px;padding:4px 12px;font:600 .85rem var(--font-display);color:var(--ink-muted);font-variant-numeric:tabular-nums}
+.stat b{color:var(--heading)}
+.card{background:var(--surface-ivory);border:1.5px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+.chart{display:block;width:100%;height:auto;background:#F4FAFC}
+.vrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 14px 0}
+.vcard{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;padding:10px;border-radius:var(--radius-sm);background:var(--bg-elevated);border:1.5px solid var(--border)}
+.vcard .let{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 17px var(--font-display)}
+.vcard b{display:block;font:700 .92rem/1.25 var(--font-display);color:var(--heading)}
+.vcard small{display:block;color:var(--ink-muted);font-size:.78rem;margin-top:2px}
+.wind{margin:10px 14px 0;font:600 .85rem var(--font-display);color:var(--ink-muted);display:flex;align-items:center;gap:8px}
+.wind svg{width:20px;height:20px}
+.q{padding:14px 14px 0;font:700 1.1rem var(--font-display);color:var(--heading)}
+.opts{display:grid;gap:8px;padding:12px 14px 16px}
+.opt{display:flex;align-items:center;gap:10px;min-height:50px;padding:10px 14px;border-radius:999px;border:1.5px solid var(--border);background:var(--bg-elevated);color:var(--ink);font:600 .98rem var(--font-body);text-align:start}
+.opt .dot{width:22px;height:22px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font:700 12px var(--font-display)}
+.opt:not([disabled]):active{transform:scale(.985)}
+.opt[disabled]{opacity:.55}
+.opt.right{border-color:var(--ok);background:var(--ok-soft);opacity:1}
+.opt.wrong{border-color:var(--coral);background:var(--bad-soft);opacity:1}
+.result{margin:0 14px;padding:14px;border-radius:var(--radius-md);display:flex;flex-direction:column;gap:8px}
+.result.ok{background:var(--ok-soft)}.result.bad{background:var(--bad-soft)}
+.result h2{font-size:1.15rem}
+.result.ok h2{color:var(--ok)}.result.bad h2{color:var(--coral-deep)}
+.result p{font-size:.95rem;line-height:1.5}
+.result .rule{font:600 .78rem var(--f-mono);color:var(--ink-muted);letter-spacing:.03em}
+.result .note{font-size:.88rem;color:var(--ink-muted)}
+.btns{display:grid;grid-template-columns:1fr 2fr;gap:10px;padding:14px}
+.btn{border:0;min-height:48px;border-radius:999px;font:700 1rem var(--font-display)}
+.btn.primary{background:var(--btn-primary);color:#fff}
+.btn.ghost{background:var(--bg-sunk);color:var(--ink)}
+.howto{font-size:.85rem;color:var(--ink-muted);text-align:center;line-height:1.45}
+@keyframes blow{to{stroke-dashoffset:-60}}
+.streak{animation:blow 2.4s linear infinite}
+@media (prefers-reduced-motion:reduce){.streak{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <nav class="mg-topnav"><a class="mg-home" href="../"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9.5h5v-5.5h3v5.5h5V10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><span>Home</span></a></nav>
+  <header>
+    <h1>Who Has Right of Way?</h1>
+    <p class="sub">Two vessels are steering for the same spot. Each letter is the course she is heading. Check the wind, then decide who keeps clear.</p>
+  </header>
+  <nav class="chips" id="chips" aria-label="Practice"></nav>
+  <div class="stats"><span class="stat">Score <b id="s-score">0/0</b></span><span class="stat">Streak <b id="s-streak">0</b></span><span class="stat">Best <b id="s-best">0</b></span></div>
+
+  <section class="card" aria-live="polite">
+    <svg class="chart" id="chart" viewBox="0 0 400 400" role="img" aria-label="Two vessels on a collision course"></svg>
+    <div class="vrow" id="vrow"></div>
+    <div class="wind" id="wind"></div>
+    <div class="q">Who gives way?</div>
+    <div class="opts" id="opts"></div>
+    <div class="result" id="result" hidden></div>
+    <div class="btns" id="btns" hidden><button class="btn ghost" id="b-replay" type="button">Replay</button><button class="btn primary" id="b-next" type="button">Next situation</button></div>
+  </section>
+  <p class="howto">After you answer, watch the give-way vessel take action. Rules: 12 sailing vessels, 13 overtaking, 14 head-on, 15 crossing, 18 who keeps out of whose way.</p>
+</main>
+
+<script>
+// ---------- basics ----------
+const LET='ABCDEFGHIJKLMNOP'.split('');                     // 16 courses, A = north, clockwise every 22.5°
+const PTS=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+const C=['#DE4457','#2C5F91'];                              // vessel 1 coral, vessel 2 blue
+const CX=200,CY=200;                                        // centre of the chart = where they would collide
+const rad=d=>d*Math.PI/180;
+const norm=a=>((a%360)+540)%360-180;                        // any angle -> -180..180
+const vel=h=>[Math.sin(rad(h)),-Math.cos(rad(h))];          // heading -> direction on screen (y points down)
+const brg=(dx,dy)=>(Math.atan2(dx,-dy)*180/Math.PI+360)%360;// direction -> bearing 0..360
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+
+// ---------- vessel types ----------
+// cat decides the Rule 18 order. spd = rough speed, so overtaking can happen.
+const TYPES={
+ motor:    {name:'Motor boat',cat:'power',spd:2,draw:'motor'},
+ ship:     {name:'Cargo ship',cat:'power',spd:1.5,draw:'ship'},
+ tug:      {name:'Tug towing a barge',cat:'power',spd:.8,draw:'tug',note:'A tug towing normally is simply a power-driven vessel. She only counts as restricted in her ability to manoeuvre if the tow stops her turning away.'},
+ motorsail:{name:'Yacht motor-sailing',cat:'power',spd:1.3,draw:'yacht',shape:'coneDown',note:'Sails up but engine running: she is a power-driven vessel (Rule 3). By day she shows a cone, point down.'},
+ yacht:    {name:'Sailing yacht',cat:'sail',spd:1.2,draw:'yacht'},
+ dinghy:   {name:'Sailing dinghy',cat:'sail',spd:1,draw:'dinghy'},
+ fishing:  {name:'Trawler, fishing',cat:'fishing',spd:.7,draw:'fishing',shape:'cones'},
+ nuc:      {name:'Ship not under command',cat:'nuc',spd:.5,draw:'ship',shape:'balls2'},
+ dredger:  {name:'Dredger at work',cat:'ram',spd:.5,draw:'dredger',shape:'bdb'},
+ tugram:   {name:'Tug towing, restricted',cat:'ram',spd:.6,draw:'tug',shape:'bdb',note:'This tug cannot turn away from her course because of the tow, so she is restricted in her ability to manoeuvre (ball-diamond-ball).'},
+ cbd:      {name:'Tanker constrained by draught',cat:'cbd',spd:1.3,draw:'ship',shape:'cyl'}
+};
+const RANK={nuc:1,ram:1,cbd:2,fishing:3,sail:4,power:5};   // lower number = more priority (Rule 18)
+const CATNAME={nuc:'vessel not under command',ram:'vessel restricted in her ability to manoeuvre',cbd:'vessel constrained by her draught',fishing:'vessel engaged in fishing',sail:'sailing vessel',power:'power-driven vessel'};
+const POWER=['motor','ship','tug','motorsail'],SAIL=['yacht','dinghy'],ALLK=Object.keys(TYPES);
+const isPow=t=>t.cat==='power'||t.cat==='cbd';             // a vessel constrained by draught is still power-driven
+
+// ---------- make a situation ----------
+// Both vessels are placed so that, on their present course and speed, they arrive at the centre together:
+// a steady bearing and closing range, so risk of collision always exists.
+const MODES=[['all','All'],['power','Power vs power'],['sail','Sail vs sail'],['mixed','Different types']];
+function makeSituation(mode){
+  if(mode==='all')mode=pick(['power','sail','mixed','mixed']); // a fair mix instead of mostly different types
+  for(let tries=0;tries<5000;tries++){
+    let k1,k2;
+    if(mode==='power'){k1=pick(POWER);k2=pick(POWER)}
+    else if(mode==='sail'){k1=pick(SAIL);k2=pick(SAIL)}
+    else{k1=pick(ALLK);k2=pick(ALLK);if(mode==='mixed'&&RANK[TYPES[k1].cat]===RANK[TYPES[k2].cat])continue}
+    const t=[TYPES[k1],TYPES[k2]];
+    const idx=[rnd(16),rnd(16)];if(idx[0]===idx[1])continue;
+    const h=idx.map(i=>i*22.5),wi=rnd(16),w=wi*22.5;        // w = direction the wind blows FROM
+    const rwa=h.map(x=>norm(w-x));                          // wind angle on each bow: + starboard, - port
+    // sailing vessels can't point closer than 45° to the wind, and a dead run makes the tack unclear
+    if(t.some((x,i)=>x.cat==='sail'&&(Math.abs(rwa[i])<45||Math.abs(rwa[i])>157.5)))continue;
+    const s=t.map(x=>x.spd*(.85+Math.random()*.3));
+    let p=h.map((x,i)=>{const v=vel(x);return [-v[0]*s[i],-v[1]*s[i]]});
+    const d=p.map(q=>Math.hypot(q[0],q[1])),m=Math.max(...d);
+    if(Math.min(...d)/m<.45)continue;                       // keep both vessels well away from the centre
+    const k=106/m;p=p.map(q=>[q[0]*k,q[1]*k]);
+    if(Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])<50)continue; // start far enough apart to read the picture
+    const rb12=norm(brg(p[1][0]-p[0][0],p[1][1]-p[0][1])-h[0]); // where 2 is, seen from 1 (+ = starboard)
+    const rb21=norm(brg(p[0][0]-p[1][0],p[0][1]-p[1][1])-h[1]);
+    const near=(x,b,tol)=>Math.abs(Math.abs(x)-b)<tol;
+    if(near(rb12,112.5,6)||near(rb21,112.5,6))continue;     // too close to the overtaking line to judge
+    const bothPow=isPow(t[0])&&isPow(t[1]);
+    const headOn=bothPow&&Math.abs(rb12)<6&&Math.abs(rb21)<6;
+    if(bothPow&&!headOn&&Math.abs(rb12)<20&&Math.abs(rb21)<20)continue; // "nearly head-on": leave out, it's a judgement call
+    let over=0;if(Math.abs(rb12)>112.5)over=2;else if(Math.abs(rb21)>112.5)over=1; // vessel number that is overtaking
+    let give,kind,rule,why=[],tack=null;
+    const n1=0,n2=1,R=[RANK[t[0].cat],RANK[t[1].cat]];
+    if(over){
+      if(R[over-1]<3)continue;                              // a ship not under command / restricted / CBD overtaking: unrealistic
+      give=over;kind='overtaking';rule='Rule 13';
+    } else if(R[0]!==R[1]){
+      give=R[0]>R[1]?1:2;kind='types';rule=t.some(x=>x.cat==='cbd')&&t[give-1].cat!=='nuc'&&t[give-1].cat!=='ram'?'Rule 18 (d)':'Rule 18';
+    } else if(bothPow){
+      if(headOn){give='both';kind='headon';rule='Rule 14'}
+      else{give=rb12>0?1:2;kind='crossing';rule='Rule 15'}
+    } else if(t[0].cat==='sail'){
+      tack=rwa.map(x=>x>0?'starboard':'port');
+      if(tack[0]!==tack[1]){give=tack[0]==='port'?1:2;kind='tacks';rule='Rule 12 (a)(i)'}
+      else{
+        const u=vel(w);                                     // pointing towards where the wind comes from
+        const pr=p.map(q=>q[0]*u[0]+q[1]*u[1]);
+        if(Math.abs(pr[0]-pr[1])<18)continue;               // windward vessel must be clear to see
+        give=pr[0]>pr[1]?1:2;kind='windward';rule='Rule 12 (a)(ii)';
+      }
+    } else continue;                                        // two fishing / two restricted: no rule between them, leave out
+    return {keys:[k1,k2],t,idx,h,w,wi,rwa,s,p,rb:[rb12,rb21],give,kind,rule,tack};
+  }
+}
+
+// ---------- explanation ----------
+function explain(S){
+  const A=LET[S.idx[0]],B=LET[S.idx[1]],L=[A,B],t=S.t;
+  const g=S.give==='both'?null:S.give-1,so=g===null?null:1-g;
+  let main='';
+  if(S.kind==='overtaking') main=`${L[g]} is coming up from more than 22.5° abaft ${L[so]}'s beam, so ${L[g]} is the overtaking vessel and must keep out of the way until she is past and clear (Rule 13). This beats every other rule, even for a sailing vessel overtaking a power-driven one.`;
+  else if(S.kind==='types'){
+    main=`${L[g]} is a ${CATNAME[t[g].cat]} and ${L[so]} is a ${CATNAME[t[so].cat]}. A ${CATNAME[t[g].cat]} keeps out of the way of a ${CATNAME[t[so].cat]} (Rule 18).`;
+    if(t[so].cat==='cbd')main+=` Strictly, ${L[g]} must not impede a vessel constrained by her draught, and the tanker must navigate with particular caution (Rule 18 d).`;
+  }
+  else if(S.kind==='headon') main=`Two power-driven vessels meeting head-on, each seeing the other dead ahead. Both alter course to starboard so they pass port to port (Rule 14).`;
+  else if(S.kind==='crossing') main=`Two power-driven vessels crossing. ${L[g]} has ${L[so]} on her own starboard side, so ${L[g]} gives way and should avoid crossing ahead, usually by turning to starboard and passing astern (Rule 15).`;
+  else if(S.kind==='tacks') main=`${L[0]} has the wind on her ${S.tack[0]} side (${S.tack[0]} tack) and ${L[1]} on her ${S.tack[1]} side (${S.tack[1]} tack). On different tacks, the port-tack vessel keeps out of the way (Rule 12).`;
+  else if(S.kind==='windward') main=`Both have the wind on their ${S.tack[0]} side (${S.tack[0]} tack). ${L[g]} is further upwind (to windward), and on the same tack the windward vessel keeps out of the way (Rule 12).`;
+  let act=S.give==='both'?'':`Give-way vessel ${L[g]}: take early and substantial action (Rule 16). Stand-on vessel ${L[so]}: keep course and speed, but act if ${L[g]} does nothing (Rule 17).`;
+  const notes=[...new Set(t.map(x=>x.note).filter(Boolean))];
+  return {main,act,notes};
+}
+
+// ---------- drawing ----------
+const hull=(l,w)=>`M0 ${-l} C${w} ${-l*.45} ${w} ${l*.35} ${w*.75} ${l} L${-w*.75} ${l} C${-w} ${l*.35} ${-w} ${-l*.45} 0 ${-l}Z`;
+const HS='stroke="#0E2338" stroke-width="1.2"';
+function sail(rwa,size){
+  // boom swings to leeward: almost centred close-hauled, well out on a run
+  const a=rad(Math.max(6,Math.min(80,(Math.abs(rwa)-30)*.65))),sx=rwa>0?-1:1;
+  const my=-size*.3,ex=sx*Math.sin(a)*size,ey=my+Math.cos(a)*size;
+  const qx=ex/2+sx*size*.5,qy=(my+ey)/2-size*.08;
+  return `<path d="M0 ${my} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}Z" fill="#FFFFFF" stroke="#16324F" stroke-width="1"/><line x1="0" y1="${my}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="#16324F" stroke-width="1.8" stroke-linecap="round"/><circle cy="${my}" r="1.8" fill="#16324F"/>`;
+}
+function vessel(t,col,rwa){
+  switch(t.draw){
+    case'motor':return `<path d="M-3 12 L-10 32 M3 12 L10 32" stroke="#FFFFFF" stroke-width="2" opacity=".9"/><path d="${hull(13,6)}" fill="${col}" ${HS}/><rect x="-3.5" y="-2" width="7" height="7" rx="1.5" fill="#FBF7EC"/>`;
+    case'ship':return `<path d="${hull(22,7.5)}" fill="${col}" ${HS}/><rect x="-4.5" y="-13" width="9" height="6" fill="#0E2338" opacity=".3"/><rect x="-4.5" y="-5" width="9" height="6" fill="#0E2338" opacity=".3"/><rect x="-6" y="9" width="12" height="7" rx="1" fill="#FBF7EC"/>`;
+    case'tug':return `<line x1="0" y1="10" x2="0" y2="28" stroke="#16324F" stroke-width="1.2" stroke-dasharray="3 2"/><rect x="-7" y="28" width="14" height="24" rx="2" fill="#B9C9D3" stroke="#16324F"/><path d="${hull(11,6.5)}" fill="${col}" ${HS}/><rect x="-3" y="-4" width="6" height="6" rx="1" fill="#FBF7EC"/>`;
+    case'yacht':return `<path d="${hull(14,5)}" fill="${col}" ${HS}/>${sail(rwa,23)}`;
+    case'dinghy':return `<path d="${hull(9,4)}" fill="${col}" ${HS}/>${sail(rwa,15)}`;
+    case'fishing':return `<path d="M-4 11 L-14 38 M4 11 L14 38 M-14 38 Q0 45 14 38" stroke="#16324F" stroke-width="1.1" stroke-dasharray="2 2" fill="none"/><path d="${hull(12,6)}" fill="${col}" ${HS}/><rect x="-3" y="-1" width="6" height="7" rx="1" fill="#FBF7EC"/>`;
+    case'dredger':return `<path d="${hull(16,7)}" fill="${col}" ${HS}/><line x1="0" y1="-2" x2="15" y2="-12" stroke="#16324F" stroke-width="2"/><rect x="12" y="-16" width="7" height="6" rx="1" fill="#16324F"/><rect x="-5" y="6" width="10" height="7" rx="1" fill="#FBF7EC"/>`;
+  }
+  return '';
+}
+function dayShape(s){
+  const k='#141414';
+  const ball=y=>`<circle cy="${y}" r="3.2" fill="${k}"/>`,dia=y=>`<polygon points="0,${y-4} 3.2,${y} 0,${y+4} -3.2,${y}" fill="${k}"/>`;
+  let g='';
+  if(s==='balls2')g=ball(-4)+ball(4);
+  if(s==='bdb')g=ball(-8)+dia(0)+ball(8);
+  if(s==='cyl')g=`<rect x="-2.6" y="-5.5" width="5.2" height="11" fill="${k}"/>`;
+  if(s==='coneDown')g=`<polygon points="-4.5,-3.5 4.5,-3.5 0,4" fill="${k}"/>`;
+  if(s==='cones')g=`<polygon points="-4.5,-8 4.5,-8 0,-1" fill="${k}"/><polygon points="0,1 4.5,8 -4.5,8" fill="${k}"/>`;
+  return `<rect x="-8" y="-13" width="16" height="26" rx="4" fill="#FFFFFF" stroke="#93A9B8"/>${g}`;
+}
+function badge(t,i){
+  return `<g transform="translate(0 -40)"><circle r="11" fill="${C[i]}" stroke="#FFFFFF" stroke-width="2"/><text y="4.6" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="13" fill="#FFFFFF">${LET[S.idx[i]]}</text>${t.shape?`<g transform="translate(22 0)">${dayShape(t.shape)}</g>`:''}</g>`;
+}
+function ringArrow(i,sel){
+  const h=i*22.5,v=vel(h),x=CX+v[0]*156,y=CY+v[1]*156,lx=CX+v[0]*181,ly=CY+v[1]*181;
+  const col=sel>=0?C[sel]:'#A9BCC8';
+  return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${h})"><path d="${hull(sel>=0?10:7,sel>=0?4.6:3.4)}" fill="${col}" ${sel>=0?'stroke="#0E2338" stroke-width="1"':''}/></g>
+  <g transform="translate(${lx.toFixed(1)} ${ly.toFixed(1)})"><rect x="-10" y="-10" width="20" height="20" rx="4" fill="${sel>=0?C[sel]:'#FFFFFF'}" stroke="${sel>=0?C[sel]:'#5C7A8F'}" stroke-width="1.5"/><text y="4.8" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="13" fill="${sel>=0?'#FFFFFF':'#16324F'}">${LET[i]}</text></g>`;
+}
+function windArrow(w,size){
+  // arrow drawn pointing the way the wind blows (from w towards w+180)
+  return `<g transform="rotate(${w+180})"><line x1="0" y1="${size*.75}" x2="0" y2="${-size*.45}" stroke="#16324F" stroke-width="${size*.16}" stroke-linecap="round"/><polygon points="0,${-size*.85} ${size*.38},${-size*.3} ${-size*.38},${-size*.3}" fill="#16324F"/></g>`;
+}
+function drawChart(){
+  const el=document.getElementById('chart');
+  let streaks='';for(let x=-150;x<=150;x+=30){const off=rnd(60);streaks+=`<line class="streak" x1="${x}" y1="-170" x2="${x}" y2="170" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-dasharray="16 44" style="stroke-dashoffset:${off}px;animation-delay:-${(off/25).toFixed(2)}s"/>`}
+  let ring='';for(let i=0;i<16;i++)ring+=ringArrow(i,S.idx.indexOf(i));
+  const tracks=S.p.map((q,i)=>`<line x1="${CX+q[0]}" y1="${CY+q[1]}" x2="${CX}" y2="${CY}" stroke="${C[i]}" stroke-width="1.6" stroke-dasharray="4 5" opacity=".75"/>`).join('');
+  const boats=S.t.map((t,i)=>`<g id="v${i}"><g class="rot">${vessel(t,C[i],S.rwa[i])}</g>${badge(t,i)}</g>`).join('');
+  el.innerHTML=`<defs><clipPath id="sea"><circle cx="${CX}" cy="${CY}" r="143"/></clipPath></defs>
+   <circle cx="${CX}" cy="${CY}" r="143" fill="#BFE0EA"/>
+   <g clip-path="url(#sea)"><g transform="translate(${CX} ${CY}) rotate(${S.w})" opacity=".55">${streaks}</g>
+   <circle cx="${CX}" cy="${CY}" r="95" fill="none" stroke="#FFFFFF" stroke-width="1" opacity=".5"/><circle cx="${CX}" cy="${CY}" r="48" fill="none" stroke="#FFFFFF" stroke-width="1" opacity=".5"/></g>
+   <circle cx="${CX}" cy="${CY}" r="143" fill="none" stroke="#17758F" stroke-width="2"/>
+   ${ring}
+   <g transform="translate(36 36)"><circle r="26" fill="#FFFFFF" stroke="#17758F" stroke-width="1.5"/>${windArrow(S.w,18)}</g>
+   <text x="36" y="76" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="11" letter-spacing="1.5" fill="#17758F">WIND</text>
+   <text x="36" y="89" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="600" font-size="11" fill="#5C7A8F">from ${PTS[S.wi]}</text>
+   ${tracks}
+   <g id="mark"><circle cx="${CX}" cy="${CY}" r="10" fill="#FFFFFF" stroke="#DE4457" stroke-width="2" stroke-dasharray="3 2.5"/><text x="${CX}" y="${CY+4.5}" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="700" font-size="13" fill="#DE4457">!</text></g>
+   ${boats}`;
+  placeBoats(S.p.map(q=>[CX+q[0],CY+q[1]]),S.h);
+}
+function placeBoats(pos,hd){
+  pos.forEach((q,i)=>{const g=document.getElementById('v'+i);if(!g)return;
+    g.setAttribute('transform',`translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})`);
+    g.querySelector('.rot').setAttribute("transform",`rotate(${hd[i].toFixed(1)}) scale(1.3)`)});
+}
+
+// ---------- after answering: show the manoeuvre ----------
+// Both keep going towards the centre; the give-way vessel (or both, head-on) turns to starboard and may slow.
+// We try a few turns and pick the first that keeps a safe gap, so the picture never shows a collision.
+const DUR=4.2,MEET=3;                                       // seconds of animation; without action they meet at 3 s
+function simulate(plan,tEnd,collect){
+  const pos=S.p.map(q=>[CX+q[0],CY+q[1]]),hd=[...S.h],sp=S.p.map(q=>Math.hypot(q[0],q[1])/MEET);
+  let minD=1e9,frames=[];const dt=1/30;
+  for(let tt=0;tt<=tEnd+1e-9;tt+=dt){
+    for(let i=0;i<2;i++){
+      const pl=plan[i];let f=1;
+      if(pl&&tt>.25){const k=Math.min(1,(tt-.25)/.7);hd[i]=S.h[i]+pl.turn*k;f=1-(1-pl.slow)*k}
+      const v=vel(hd[i]);pos[i][0]+=v[0]*sp[i]*f*dt;pos[i][1]+=v[1]*sp[i]*f*dt;
+    }
+    minD=Math.min(minD,Math.hypot(pos[0][0]-pos[1][0],pos[0][1]-pos[1][1]));
+    if(collect)frames.push([pos.map(q=>[...q]),[...hd]]);
+  }
+  return {minD,frames};
+}
+function bestPlan(){
+  const who=S.give==='both'?[0,1]:[S.give-1];
+  const turns=S.give==='both'?[30,45,60,75]:[40,60,80,100,120,140],slows=[1,.7,.5,.3,.15];
+  for(const sl of slows)for(const tu of turns){
+    const plan=[null,null];who.forEach(i=>plan[i]={turn:tu,slow:sl});
+    if(simulate(plan,DUR+1.5).minD>40)return plan;
+  }
+  const plan=[null,null];who.forEach(i=>plan[i]={turn:90,slow:.2});return plan;
+}
+let anim=null;
+function play(){
+  cancelAnimationFrame(anim);
+  const {frames}=simulate(bestPlan(),DUR,true);
+  document.getElementById('mark').style.opacity='.25';
+  const t0=performance.now();
+  const step=now=>{const i=Math.min(frames.length-1,Math.floor((now-t0)/1000*30));placeBoats(frames[i][0],frames[i][1]);if(i<frames.length-1)anim=requestAnimationFrame(step)};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){const f=frames[frames.length-1];placeBoats(f[0],f[1]);return}
+  anim=requestAnimationFrame(step);
+}
+
+// ---------- state + screen ----------
+const KEY='st-right-of-way-v1';
+let st={mode:'all',right:0,done:0,streak:0,best:0};
+try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+let S=null,answered=false;
+
+function renderStats(){
+  document.getElementById('s-score').textContent=`${st.right}/${st.done}`;
+  document.getElementById('s-streak').textContent=st.streak;
+  document.getElementById('s-best').textContent=st.best;
+  document.getElementById('chips').innerHTML=MODES.map(([k,n])=>`<button class="chip" type="button" data-m="${k}" aria-pressed="${st.mode===k}">${n}</button>`).join('');
+}
+function newSituation(){
+  cancelAnimationFrame(anim);
+  // skip the rare layouts where the give-way manoeuvre can't be shown with a clear gap
+  for(let i=0;i<30;i++){S=makeSituation(st.mode);if(simulate(bestPlan(),DUR+1.5).minD>40)break}
+  answered=false;
+  drawChart();
+  document.getElementById('vrow').innerHTML=S.t.map((t,i)=>`<div class="vcard"><span class="let" style="background:${C[i]}">${LET[S.idx[i]]}</span><span><b>${t.name}</b><small>Heading ${PTS[S.idx[i]]}</small></span></div>`).join('');
+  document.getElementById('wind').innerHTML=`<svg viewBox="-20 -20 40 40" aria-hidden="true">${windArrow(S.w,16)}</svg>Wind from the ${PTS[S.wi]}`;
+  const A=LET[S.idx[0]],B=LET[S.idx[1]];
+  const opts=[[1,`${A} gives way`,C[0],A],[2,`${B} gives way`,C[1],B],['both','Both alter course to starboard','#17758F','↻']];
+  document.getElementById('opts').innerHTML=opts.map(([v,txt,col,l])=>`<button class="opt" type="button" data-v="${v}"><span class="dot" style="background:${col}">${l}</span>${txt}</button>`).join('');
+  document.getElementById('result').hidden=true;document.getElementById('btns').hidden=true;
+  renderStats();
+}
+function answer(v){
+  if(answered)return;answered=true;
+  const ok=String(v)===String(S.give);
+  st.done++;if(ok){st.right++;st.streak++;st.best=Math.max(st.best,st.streak)}else st.streak=0;save();
+  document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;
+    if(b.dataset.v===String(S.give))b.classList.add('right');else if(b.dataset.v===String(v))b.classList.add('wrong')});
+  const e=explain(S),L=S.idx.map(i=>LET[i]);
+  const head=S.give==='both'?'Both alter to starboard':`${L[S.give-1]} gives way, ${L[2-S.give]} stands on`;
+  const r=document.getElementById('result');
+  r.className='result '+(ok?'ok':'bad');
+  r.innerHTML=`<h2>${ok?'Correct!':'Not quite.'} ${head}</h2><p>${e.main}</p>${e.act?`<p>${e.act}</p>`:''}${e.notes.map(n=>`<p class="note">${n}</p>`).join('')}<span class="rule">${S.rule}</span>`;
+  r.hidden=false;document.getElementById('btns').hidden=false;
+  renderStats();play();
+}
+document.getElementById('opts').addEventListener('click',e=>{const b=e.target.closest('.opt');if(b)answer(b.dataset.v)});
+document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;st.mode=b.dataset.m;save();newSituation()});
+document.getElementById('b-next').onclick=()=>{newSituation();window.scrollTo({top:0,behavior:'smooth'})};
+document.getElementById('b-replay').onclick=()=>{placeBoats(S.p.map(q=>[CX+q[0],CY+q[1]]),S.h);setTimeout(play,250)};
+newSituation();
+</script>
+<script src="../shared/js/app.js"></script>
+</body>
+</html>

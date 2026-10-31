@@ -1,6 +1,6 @@
 // Sailing Theory service worker.
 // Bump CACHE_NAME on every update you push, so phones pick up the new version.
-const CACHE_NAME = 'sailing-theory-v5';
+const CACHE_NAME = 'sailing-theory-v6';
 const APP_FILES = [
   './',
   './index.html',
@@ -10,6 +10,8 @@ const APP_FILES = [
   './shared/img/contour.svg',
   './lights-signals/',
   './lights-signals/index.html',
+  './right-of-way/',
+  './right-of-way/index.html',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-512-maskable.png',
